@@ -1,0 +1,8 @@
+argparse
+os
+tarfile
+collections
+gzip
+multiprocessing
+pandas
+biopython
