@@ -40,3 +40,15 @@ The input directory should ideally reside in the same local environment establis
 
 
 This pipeline description is structured to guide users through a sequence of operations for estimating transcript isoform abundances within a dataset. The outlined workflow is not only a representation of the analytical procedure but also serves as instructive documentation for replicability and application to diverse transcriptomic datasets. For further insights and updates, users are invited to consult the pipeline's repository on GitHub.
+
+The interpretation of other files:
+
+The 'human_pc_gene.tsv' file contains an annotated list of human protein-coding genes, each associated with a unique sequence region at the isoform level. This dataset comprises a total of 20,818 distinct genes derived from Homo sapiens, systematically cataloged to facilitate research on genetic variation and isoform expression.
+
+The 'isoform_unique_50mer_summary_list.txt' details a comprehensive inventory of isoforms, including their names and corresponding 50-mer sequences associated with unique genomic regions. The summary encompasses 175,572 isoforms subjected to unique region screening. Out of these, 121,144 isoforms are characterized by unique sequences, while 54,428 isoforms lack distinct sequences, sharing regions with alternate isoforms.
+
+The documentation provided in 'README_GaussF.md' offers a detailed guide for utilizing the GaussF Python script. The README delineates the functional scope of the script, prerequisites for execution, and step-by-step instructions to ensure accurate computational procedures for users pursuing studies in Gaussian filtering.
+
+In 'README_kmer_counting.md', users will find thorough instructions for operating the k-mer counting Python script. This README document includes the script's purpose, system requirements, installation guidelines, and a comprehensive command-line interface (CLI) usage tutorial, facilitating precise k-mer analysis in genomic sequences.
+
+The 'README_reference_unique_sequence.md' serves as an instructional manual for the associated Python script that identifies unique sequences within reference genomes. It provides a clear exposition of the script's objectives, dependencies, configuration steps, and detailed execution commands, designed to aid researchers in pinpointing and studying unique genomic regions.
