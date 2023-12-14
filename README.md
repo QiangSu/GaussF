@@ -7,7 +7,7 @@ The GaussF pipeline is designed to accurately quantify transcript abundance at t
 
 Step 1: Unique k-mer Identification
 
-The script isoform_unique_sequence-loop.py enumerates distinct k-mers for each transcript. The targeted transcript set is defined by the research focus and can be customized based on specific gene lists. Approximately 175,000 transcripts at the isoform level can be processed to assign unique genomic regions.
+The script isoform_unique_sequence-loop.py enumerates distinct k-mers for each transcript. The targeted transcript set is defined by the research focus and can be customized based on specific gene lists. Approximately 175,000 transcripts at the isoform level can be processed to assign unique genomic regions. The targeted transcript set can be customized based on specific gene lists, making it suitable for a wide range of research applications. To use this script, simply run it with the desired input file containing transcript sequences and specify the k-mer length. The output will be a list of unique sequences for each transcript, along with their corresponding genomic coordinates. If you require the unique reference file, please send an email to su@chemie.uni-siegen.de and we will provide it to you promptly.
 
 Step 2: k-mer Counting and Normalization
 
@@ -52,3 +52,5 @@ The documentation provided in 'README_GaussF.md' offers a detailed guide for uti
 In 'README_kmer_counting.md', users will find thorough instructions for operating the k-mer counting Python script. This README document includes the script's purpose, system requirements, installation guidelines, and a comprehensive command-line interface (CLI) usage tutorial, facilitating precise k-mer analysis in genomic sequences.
 
 The 'README_reference_unique_sequence.md' serves as an instructional manual for the associated Python script that identifies unique sequences within reference genomes. It provides a clear exposition of the script's objectives, dependencies, configuration steps, and detailed execution commands, designed to aid researchers in pinpointing and studying unique genomic regions.
+
+We welcome contributions to this project and encourage users to submit issues or pull requests on our GitHub repository. Additionally, if you have any questions or comments about this script, please feel free to contact us via email.
