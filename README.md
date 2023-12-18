@@ -20,7 +20,7 @@ python kmer_counting_loop.py \
 --k 50 \
 --chunk_size 10000 \
 --read_length 151 \
---fastq ./1032245-T_cutadapt_trim_2P_100000.fastq.gz \
+--fastq ./N1_cutadapt_trim_2P.fastq.gz \
 --tar_gz /path/to/combined_isoform_50mer_csv_files.tar.gz \
 --output /path/to/unique_frequence_csv/
 
