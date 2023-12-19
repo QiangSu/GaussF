@@ -2,7 +2,6 @@ from collections import defaultdict
 import csv
 import os
 
-
 def read_fasta(file_path):
     headers = []
     sequences = []
@@ -13,61 +12,61 @@ def read_fasta(file_path):
             if line.startswith('>'):
                 if sequence:
                     sequences.append(sequence)
-                sequence = ""  # Reset the sequence
-                headers.append(line[1:])  # Append the header without the '>'
+                    sequence = ""
+                headers.append(line[1:])  # Remove the '>' character
             else:
                 sequence += line
         if sequence:
             sequences.append(sequence)
     return headers, sequences
 
-
 def sanitize_filename(header):
     return header.replace('|', '_')
 
+def process_fasta_write_csv(input_txt_path, output_directory):
+    # Read the FASTA file
+    transcript_headers, transcripts = read_fasta(input_txt_path)
 
-# Create a single output directory
-output_directory = './kmer_frequency_distribution'
-os.makedirs(output_directory, exist_ok=True)
-
-# Create a dictionary to map kmers to the transcripts they are found in
-kmer_transcript_mapping = defaultdict(set)
-
-# Loop through multiple FASTA files
-for i in range(1, 39):
-    fasta_file = f'./mart_export{i}.txt'
-    transcript_headers, transcripts = read_fasta(fasta_file)
-
+    # Ensure output directory exists
+    os.makedirs(output_directory, exist_ok=True)
     kmer_length = 50
-
-    # Initialize a global kmer count dictionary
     global_kmer_counts = defaultdict(int)
+    kmer_transcript_sets = defaultdict(set)  # Stores which transcripts contain the kmer
 
-    # Process each transcript in the FASTA file
+    # Count kmers globally and per transcript
     for isoform_index, sequence in enumerate(transcripts):
-        # Initialize local kmer count dictionary
-        local_kmer_counts = defaultdict(int)
-
-        # Iterate over kmers in the transcript
-        for j in range(len(sequence) - kmer_length + 1):
-            kmer = sequence[j:j + kmer_length]
-            local_kmer_counts[kmer] += 1
+        for i in range(len(sequence) - kmer_length + 1):
+            kmer = sequence[i:i + kmer_length]
             global_kmer_counts[kmer] += 1
-            kmer_transcript_mapping[kmer].add(transcript_headers[isoform_index])  # Add header to kmer mapping
+            kmer_transcript_sets[kmer].add(isoform_index)
 
-    # After processing all transcripts, output to CSV for each transcript
+    # Output kmer data to CSV files
     for isoform_index, header in enumerate(transcript_headers):
-        output_csv_path = os.path.join(output_directory, f"mart_export{i}_{sanitize_filename(header)}_kmers.csv")
+        output_csv_path = os.path.join(output_directory, sanitize_filename(header) + '_kmers.csv')
 
         with open(output_csv_path, mode='w', newline='') as csv_file:
             csv_writer = csv.writer(csv_file)
-            csv_writer.writerow(['kmer', 'Local Frequency', 'Global Frequency', 'Found In Transcripts'])
+            csv_writer.writerow(['kmer', 'Local Frequency', 'Global Frequency', 'Present in Transcripts'])
 
-            # Iterate through all kmers and write them to the CSV
+            # Local kmer occurrences for this transcript
+            local_kmer_counts = defaultdict(int)
+            for i in range(len(transcripts[isoform_index]) - kmer_length + 1):
+                kmer = transcripts[isoform_index][i:i + kmer_length]
+                local_kmer_counts[kmer] += 1
+
+            # Write the kmers, frequencies and sets of transcripts where the kmer is present
             for kmer, local_freq in local_kmer_counts.items():
                 global_freq = global_kmer_counts[kmer]
-                found_in_transcripts = '; '.join(kmer_transcript_mapping[kmer] - {header})  # Exclude current transcript
-                csv_writer.writerow([kmer, local_freq, global_freq, found_in_transcripts])
+                transcripts_containing_kmer = ', '.join(transcript_headers[i] for i in kmer_transcript_sets[kmer])
+                csv_writer.writerow([kmer, local_freq, global_freq, transcripts_containing_kmer])
 
-    # Notify the user for each file processed
-    print(f"Kmers for mart_export{i} have been saved as CSV files in the directory: {output_directory}")
+    print(f"Kmers for each transcript from {input_txt_path} have been saved as CSV files in the directory: {output_directory}")
+
+# Main loop to process each FASTA file
+input_directory = './'
+output_directory = './kmer_frequency_distribution'  # The single output directory
+os.makedirs(output_directory, exist_ok=True)  # Ensure the output directory exists
+
+for i in range(1, 39):
+    input_txt_path = os.path.join(input_directory, f"mart_export{i}.txt")
+    process_fasta_write_csv(input_txt_path, output_directory)
