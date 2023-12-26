@@ -39,6 +39,9 @@ python pipeline_abundance_GaussF_esti_loop.py \
 
 The input directory should ideally reside in the same local environment established during k-mer counting in Step 2.
 
+Example Usage of GaussF Pipeline
+
+In the gaussf > example_GaussF/ folder, we have uploaded 14 example CSV files representing transcript k-mers and their sequencing counts. These files are prepared for use with the GaussF pipeline and provide a comprehensive dataset to process with the script for an unbiased total count estimation.
 
 This pipeline description is structured to guide users through a sequence of operations for estimating transcript isoform abundances within a dataset. The outlined workflow is not only a representation of the analytical procedure but also serves as instructive documentation for replicability and application to diverse transcriptomic datasets. For further insights and updates, users are invited to consult the pipeline's repository on GitHub.
 
