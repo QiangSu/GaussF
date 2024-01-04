@@ -19,11 +19,13 @@ Example usage:
 bash
 python kmer_counting_loop.py \
 --k 50 \
---chunk_size 10000 \
+--chunk_size 1000000 \
+--num_threads 10 \
 --read_length 151 \
 --fastq ./N1_cutadapt_trim_2P.fastq.gz \
---tar_gz /path/to/combined_isoform_50mer_csv_files.tar.gz \
---output /path/to/unique_frequence_csv/
+--csv_dir /path/to//combined_isoform_50mer_csv_files/ \
+--output /path/to/unique_frequence_csv/ \
+
 
 It is crucial to ensure that the reference .tar.gz file containing unique k-mer CSVs is located within the same repository as the kmer_counting_loop.py script.
 
