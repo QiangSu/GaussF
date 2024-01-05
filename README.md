@@ -36,8 +36,11 @@ Finally, the unique-region-derived k-mer counts are analyzed by the pipeline_abu
 Example usage:
 bash
 python pipeline_abundance_GaussF_esti_loop.py \
+--threshold 10 \
 --input /path/to/unique_frequence_csv \
---output /path/to/results_file.txt
+--output /path/to/results_file.txt \
+
+# threshold is defined as the minimum number of unique k-mers required for the Gaussian fitting process. It serves as a cutoff for considering the quality and quantity of k-mer data that are sufficient to proceed with the calculation of GC content distribution. This ensures that the fitting is performed on datasets with a representative sample of k-mers from a given transcript isoform's unique region.
 
 The input directory should ideally reside in the same local environment established during k-mer counting in Step 2.
 
