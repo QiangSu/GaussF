@@ -60,10 +60,7 @@ def main(input_folder, output_file_path, row_threshold):
             y_data = gc_content_grouped['sum'].cumsum()
             initial_guess = [0, y_data.iloc[-1], gc_content_grouped['GC Content (%)'].mean(),
                              gc_content_grouped['GC Content (%)'].std()]
-            popt, _ = curve_fit(gaussian_cdf,
-                                gc_content_grouped['GC Content (%)'],
-                                y_data,
-                                p0=initial_guess,
+            popt, _ = curve_fit(gaussian_cdf, gc_content_grouped['GC Content (%)'], y_data, p0=initial_guess,
                                 maxfev=9000)
 
             # Extract gene name and transcript ID from the filename using regular expressions
@@ -74,8 +71,8 @@ def main(input_folder, output_file_path, row_threshold):
                 print(f"Could not parse gene name and transcript ID from {file_name}")
                 continue
 
-            # Format output to exclude 'Gene:' and 'Transcript:', and write to output file
-            result_string = f"{gene_name},{transcript_id},{popt[1]},{popt[2]},{popt[3]}\n"
+            # Format output to include gene name and transcript ID, and fitting parameters rounded to two decimal places
+            result_string = f"{gene_name},{transcript_id},{popt[1]:.2f},{popt[2]:.2f},{popt[3]:.2f}\n"
 
             with open(output_file_path, "a") as f_out:
                 f_out.write(result_string)
@@ -87,24 +84,11 @@ def main(input_folder, output_file_path, row_threshold):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Analyze GC content and fit Gaussian CDF.")
-    parser.add_argument(
-        '--input',
-        type=str,
-        required=True,
-        help="Path to the input folder containing the CSV files."
-    )
-    parser.add_argument(
-        '--output',
-        type=str,
-        required=True,
-        help="Path and name of the output file to save the results."
-    )
-    parser.add_argument(
-        '--threshold',
-        type=int,
-        default=10,
-        help="Minimum number of data points required for fitting. Default is 10."
-    )
+    parser.add_argument('--input', type=str, required=True, help="Path to the input folder containing the CSV files.")
+    parser.add_argument('--output', type=str, required=True,
+                        help="Path and name of the output file to save the results.")
+    parser.add_argument('--threshold', type=int, default=10,
+                        help="Minimum number of data points required for fitting. Default is 10.")
     args = parser.parse_args()
 
     # Ensure the output directory exists
