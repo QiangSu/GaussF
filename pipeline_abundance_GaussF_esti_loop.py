@@ -5,18 +5,30 @@ from scipy.stats import norm
 import os
 import re
 
-
 # Function to calculate the GC content percentage of a sequence
 def calculate_gc_content(seq):
     gc_count = seq.count('G') + seq.count('C')
     gc_content_percentage = (gc_count / len(seq)) * 100
     return gc_content_percentage
 
-
 # Adjusted Gaussian CDF function according to the specified equation
 def gaussian_cdf(x, A0, A, xc, w):
     return A0 + A * norm.cdf((x - xc) / w)
 
+def extract_gene_transcript(file_name):
+    match = re.match(r'(\w+)_(ENST\d+\.\d+)_.*', file_name)
+    if match:
+        return match.groups()
+    else:
+        return None, None
+
+def format_unfitting_output(file_name, sum_frequency, message):
+    gene_name, transcript_id = extract_gene_transcript(file_name)
+    if gene_name and transcript_id:
+        return f"{gene_name},{transcript_id},{sum_frequency},,{message}\n"
+    else:
+        print(f"Could not parse gene name and transcript ID from {file_name}")
+        return ""
 
 def main(input_folder, output_file_path, row_threshold):
     # Get the full path of the input folder
@@ -27,7 +39,7 @@ def main(input_folder, output_file_path, row_threshold):
 
     # Open the output file and write the header
     with open(output_file_path, 'w') as f_out:
-        f_out.write('Gene,Transcript ID,Abundance RPKM,Mean,SD\n')  # Write the header
+        f_out.write('Gene,Transcript ID,Sum or Abundance RPKM,Mean,SD\n')  # Write the header
 
     # Process each CSV file
     for file_name in csv_files:
@@ -46,54 +58,42 @@ def main(input_folder, output_file_path, row_threshold):
         # Group by 'GC Content (%)' and aggregate 'Frequency' column as sum
         gc_content_grouped = df.groupby('GC Content (%)')[1].agg(['sum']).reset_index()
 
-        # Skip if the number of rows is less than the threshold
-        if len(gc_content_grouped) < row_threshold:
-            print(
-                f"Skipping file {file_name}: number of data points ({len(gc_content_grouped)}) below threshold ({row_threshold}).")
-            continue
-
         # Sort the grouped data by 'GC Content (%)' in ascending order
         gc_content_grouped.sort_values('GC Content (%)', inplace=True)
 
         try:
-            # Fit the Gaussian CDF to the accumulated sum of frequencies
-            y_data = gc_content_grouped['sum'].cumsum()
-            initial_guess = [0, y_data.iloc[-1], gc_content_grouped['GC Content (%)'].mean(),
-                             gc_content_grouped['GC Content (%)'].std()]
-            popt, _ = curve_fit(gaussian_cdf, gc_content_grouped['GC Content (%)'], y_data, p0=initial_guess,
-                                maxfev=9000)
-
-            # Check if the mean value is smaller than 0, skip this fitting
-            if popt[2] < 0:
-                print(f"Skipping fitting for {file_name}: mean value is smaller than 0.")
-                continue
-
-            # Extract gene name and transcript ID from the filename using regular expressions
-            match = re.match(r'(\w+)_(ENST\d+\.\d+)_.*', file_name)
-            if match:
-                gene_name, transcript_id = match.groups()
+            # Only fit if rows are above threshold and mean is expected to be >= 0
+            if len(gc_content_grouped) < row_threshold or gc_content_grouped['GC Content (%)'].mean() < 0:
+                message = "Below threshold: no fitting performed" if len(gc_content_grouped) < row_threshold else "Mean value negative: no fitting performed"
+                result_string = format_unfitting_output(file_name, df[1].sum(), message)
             else:
-                print(f"Could not parse gene name and transcript ID from {file_name}")
-                continue
+                # Fit the Gaussian CDF to the accumulated sum of frequencies
+                y_data = gc_content_grouped['sum'].cumsum()
+                initial_guess = [0, y_data.iloc[-1], gc_content_grouped['GC Content (%)'].mean(), gc_content_grouped['GC Content (%)'].std()]
+                popt, _ = curve_fit(gaussian_cdf, gc_content_grouped['GC Content (%)'], y_data, p0=initial_guess, maxfev=9000)
 
-            # Format output to include gene name and transcript ID, and fitting parameters rounded to two decimal places
-            result_string = f"{gene_name},{transcript_id},{popt[1]:.2f},{popt[2]:.2f},{popt[3]:.2f}\n"
+                gene_name, transcript_id = extract_gene_transcript(file_name)
+                if not gene_name or not transcript_id:
+                    continue
 
-            with open(output_file_path, "a") as f_out:
-                f_out.write(result_string)
+                # Format fitting parameters rounded to two decimal places
+                result_string = f"{gene_name},{transcript_id},{popt[1]:.2f},{popt[2]:.2f},{popt[3]:.2f}\n"
+
         except RuntimeError as e:
             print(f"Warning: Fitting did not converge for {file_name}. Error: {e}")
+            result_string = format_unfitting_output(file_name, df[1].sum(), "Fitting error: no fitting performed")
+
+        # Write the result or the sum
+        with open(output_file_path, "a") as f_out:
+            f_out.write(result_string)
 
     print(f"Results have been written to {output_file_path}")
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Analyze GC content and fit Gaussian CDF.")
     parser.add_argument('--input', type=str, required=True, help="Path to the input folder containing the CSV files.")
-    parser.add_argument('--output', type=str, required=True,
-                        help="Path and name of the output file to save the results.")
-    parser.add_argument('--threshold', type=int, default=10,
-                        help="Minimum number of data points required for fitting. Default is 10.")
+    parser.add_argument('--output', type=str, required=True, help="Path and name of the output file to save the results.")
+    parser.add_argument('--threshold', type=int, default=10, help="Minimum number of data points required for fitting. Default is 10.")
     args = parser.parse_args()
 
     # Ensure the output directory exists
