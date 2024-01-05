@@ -63,6 +63,11 @@ def main(input_folder, output_file_path, row_threshold):
             popt, _ = curve_fit(gaussian_cdf, gc_content_grouped['GC Content (%)'], y_data, p0=initial_guess,
                                 maxfev=9000)
 
+            # Check if the mean value is smaller than 0, skip this fitting
+            if popt[2] < 0:
+                print(f"Skipping fitting for {file_name}: mean value is smaller than 0.")
+                continue
+
             # Extract gene name and transcript ID from the filename using regular expressions
             match = re.match(r'(\w+)_(ENST\d+\.\d+)_.*', file_name)
             if match:
