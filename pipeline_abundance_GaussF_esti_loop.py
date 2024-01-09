@@ -11,79 +11,76 @@ def calculate_gc_content(seq):
     gc_content_percentage = (gc_count / len(seq)) * 100
     return gc_content_percentage
 
-# Adjusted Gaussian CDF function according to the specified equation
+# Single Gaussian CDF function
 def gaussian_cdf(x, A0, A, xc, w):
     return A0 + A * norm.cdf((x - xc) / w)
 
+# Function to extract gene and transcript information from filename
 def extract_gene_transcript(file_name):
-    match = re.match(r'(\w+)_(ENST\d+\.\d+)_.*', file_name)
+    match = re.match(r'([A-Za-z0-9]+)_(ENST\d+)_.*\.csv$', file_name)
     if match:
         return match.groups()
     else:
         return None, None
 
-def format_unfitting_output(file_name, sum_frequency, message):
-    gene_name, transcript_id = extract_gene_transcript(file_name)
-    if gene_name and transcript_id:
-        return f"{gene_name},{transcript_id},{sum_frequency},,{message}\n"
-    else:
-        print(f"Could not parse gene name and transcript ID from {file_name}")
-        return ""
+# Function to create the output string for unfit data
+def format_unfit_output(gene_name, transcript_id, global_frequency, present_transcript, sum_frequency, message):
+    return f"{gene_name},{transcript_id},{global_frequency},{present_transcript},{sum_frequency:.2f},,{message}\n"
 
+# Main procedure
 def main(input_folder, output_file_path, row_threshold):
-    # Get the full path of the input folder
     input_folder_path = os.path.abspath(input_folder)
-
-    # Find all CSV files in the input folder
     csv_files = [file for file in os.listdir(input_folder_path) if file.endswith('.csv')]
 
-    # Open the output file and write the header
     with open(output_file_path, 'w') as f_out:
-        f_out.write('Gene,Transcript ID,Sum or Abundance RPKM,Mean,SD\n')  # Write the header
+        f_out.write('Gene,Transcript ID,Global Frequency,Present in Transcripts,Sum or Abundance RPKM,Mean,SD\n')
 
-    # Process each CSV file
     for file_name in csv_files:
-        # Read the CSV file without a header
-        df = pd.read_csv(os.path.join(input_folder_path, file_name), header=None)
+        df = pd.read_csv(os.path.join(input_folder_path, file_name))
 
-        # Convert 'Frequency' column to float
-        df[1] = pd.to_numeric(df[1], errors='coerce')
+        global_frequency = df.at[0, 'Global_Frequency']
+        present_transcripts = "-".join(df['Present_in_Transcripts'].unique()) if global_frequency > 1 else df.at[0, 'Present_in_Transcripts']
+        df['Normalized_K-mer_Count'] = pd.to_numeric(df['Normalized_K-mer_Count'], errors='coerce')
+        df.dropna(subset=['Normalized_K-mer_Count'], inplace=True)
+        df['GC Content (%)'] = df['kmer'].apply(calculate_gc_content)
 
-        # Drop NA values that could not be converted to float
-        df.dropna(subset=[1], inplace=True)
-
-        # Add a new column to the DataFrame for GC content
-        df['GC Content (%)'] = df[0].apply(calculate_gc_content)
-
-        # Group by 'GC Content (%)' and aggregate 'Frequency' column as sum
-        gc_content_grouped = df.groupby('GC Content (%)')[1].agg(['sum']).reset_index()
-
-        # Sort the grouped data by 'GC Content (%)' in ascending order
+        gc_content_grouped = df.groupby('GC Content (%)')['Normalized_K-mer_Count'].agg(['sum']).reset_index()
         gc_content_grouped.sort_values('GC Content (%)', inplace=True)
 
+        sum_frequency = df['Normalized_K-mer_Count'].sum()
+        gene_name, transcript_id = extract_gene_transcript(file_name)
+        if not gene_name or not transcript_id:
+            print(f"Warning: Could not parse gene name and transcript ID from {file_name}")
+            continue
+
+        if len(df['kmer']) < row_threshold:
+            result_string = format_unfit_output(gene_name, transcript_id, global_frequency, present_transcripts, sum_frequency, "Below k-mer threshold: no fitting performed")
+            with open(output_file_path, "a") as f_out:
+                f_out.write(result_string)
+            continue
+
+        if len(gc_content_grouped) < 4:  # There are four parameters in the gaussian_cdf function
+            result_string = format_unfit_output(gene_name, transcript_id, global_frequency, present_transcripts, sum_frequency, "Not enough GC content data points for fitting")
+            with open(output_file_path, "a") as f_out:
+                f_out.write(result_string)
+            continue
+
         try:
-            # Only fit if rows are above threshold and mean is expected to be >= 0
-            if len(gc_content_grouped) < row_threshold or gc_content_grouped['GC Content (%)'].mean() < 0:
-                message = "Below threshold: no fitting performed" if len(gc_content_grouped) < row_threshold else "Mean value negative: no fitting performed"
-                result_string = format_unfitting_output(file_name, df[1].sum(), message)
-            else:
-                # Fit the Gaussian CDF to the accumulated sum of frequencies
-                y_data = gc_content_grouped['sum'].cumsum()
-                initial_guess = [0, y_data.iloc[-1], gc_content_grouped['GC Content (%)'].mean(), gc_content_grouped['GC Content (%)'].std()]
-                popt, _ = curve_fit(gaussian_cdf, gc_content_grouped['GC Content (%)'], y_data, p0=initial_guess, maxfev=9000)
+            y_data = gc_content_grouped['sum'].cumsum()
+            initial_guess = [0, y_data.iloc[-1], gc_content_grouped['GC Content (%)'].mean(), gc_content_grouped['GC Content (%)'].std()]
+            popt, pcov = curve_fit(gaussian_cdf, gc_content_grouped['GC Content (%)'], y_data, p0=initial_guess, maxfev=9000)
 
-                gene_name, transcript_id = extract_gene_transcript(file_name)
-                if not gene_name or not transcript_id:
-                    continue
+            # Check for a negative mean value and mean greater than standard deviation
+            if popt[2] < 0 or popt[2] <= popt[3]:
+                raise ValueError("Negative mean or mean not greater than standard deviation")
 
-                # Format fitting parameters rounded to two decimal places
-                result_string = f"{gene_name},{transcript_id},{popt[1]:.2f},{popt[2]:.2f},{popt[3]:.2f}\n"
+            # Fitting succeeded, so output normal results
+            result_string = f"{gene_name},{transcript_id},{global_frequency},{present_transcripts},{popt[1]:.2f},{popt[2]:.2f},{popt[3]:.2f}\n"
+        except (RuntimeError, ValueError) as e:
+            # Fitting failed or mean value is negative or not greater than standard deviation; output the sum of individual values
+            error_message = str(e)
+            result_string = format_unfit_output(gene_name, transcript_id, global_frequency, present_transcripts, sum_frequency, f"Fitting failed: {error_message}")
 
-        except RuntimeError as e:
-            print(f"Warning: Fitting did not converge for {file_name}. Error: {e}")
-            result_string = format_unfitting_output(file_name, df[1].sum(), "Fitting error: no fitting performed")
-
-        # Write the result or the sum
         with open(output_file_path, "a") as f_out:
             f_out.write(result_string)
 
@@ -93,12 +90,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Analyze GC content and fit Gaussian CDF.")
     parser.add_argument('--input', type=str, required=True, help="Path to the input folder containing the CSV files.")
     parser.add_argument('--output', type=str, required=True, help="Path and name of the output file to save the results.")
-    parser.add_argument('--threshold', type=int, default=10, help="Minimum number of data points required for fitting. Default is 10.")
+    parser.add_argument('--threshold', type=int, default=10, help="Minimum number of k-mers required for fitting. Default is 10.")
     args = parser.parse_args()
 
     # Ensure the output directory exists
-    output_directory = os.path.dirname(os.path.abspath(args.output))
-    os.makedirs(output_directory, exist_ok=True)
+    output_directory = os.path.dirname(args.output)
+    if not os.path.exists(output_directory):
+        os.makedirs(output_directory)
 
-    # Run the main function with additional row_threshold argument
     main(args.input, args.output, args.threshold)
