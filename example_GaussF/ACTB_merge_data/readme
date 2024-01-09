@@ -1,1 +1,9 @@
+We have uploaded a total of 23 merged CSV files, with each file representing a different isoform. These merged files 
+contain normalized counts represented as RPKM (Reads Per Kilobase per Million mapped reads) values and are named 
+after their respective isoforms, followed by "_kmers_merged_normalized.csv". For example, one of the files is named 
+"ACTB_ENST00000676189_kmers_merged_normalized.csv".
 
+These merged CSV files were created based on the input files, which include the kmer file 
+("ACTB_ENST00000676189_kmers.csv") and the corresponding kmer counts file ("ACTB_ENST00000676189_kmers_kmer_counts.csv"). 
+The RPKM values were calculated using these inputs to provide a more accurate and comprehensive view of gene 
+expression levels for each isoform.
