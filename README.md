@@ -25,7 +25,9 @@ Usage
 To use this tool, you need to have Python installed on your system. The script requires a FASTA file with the transcript sequences as input and a directory path where the CSV files will be saved as output.
 
 Execute the script with the necessary arguments from the command line. For example:
+
 python kmer_frequency_distribution_mini_shared.py --input path/to/your/ACTB_reference/mart_export_ACTB.txt --output path/to/output/directory/
+
 Command-Line Arguments
 --input: Path to the input FASTA file containing transcript sequences.
 --output: Path to the output directory where CSV files for each transcript will be saved.
@@ -54,6 +56,7 @@ Usage
 To use this tool, you need to provide several command-line arguments. Here is the syntax for running the script:
 
 python kmer_counter.py --k <kmer_size> --chunk_size <chunk_size> --fastq <fastq_file_path> --kmer_dir <kmer_directory> --output <output_directory> [--threads <number_of_threads>]
+
 Command-Line Arguments
 --k: Size of the k-mer you wish to count (required).
 --chunk_size: Number of records from the FASTQ file to be processed in each parallel chunk (required).
