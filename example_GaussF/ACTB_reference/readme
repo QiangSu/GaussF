@@ -1,3 +1,7 @@
-A total of 23 isoforms have been uploaded in CSV format. Each file represents a different isoform and is named after the isoform, followed by "_kmers.csv". For example, one of the files is named "ACTB_ENST00000676189_kmers.csv".
+A total of 23 isoforms have been uploaded in CSV format. Each file represents a different isoform and is named 
+after the isoform, followed by "_kmers.csv". For example, one of the files is named "ACTB_ENST00000676189_kmers.csv".
 
-Additionally, corresponding counting CSV files have also been uploaded for each isoform. These counting files contain the kmer counts for the respective isoform and are named after the isoform, followed by "_kmers_kmer_counts.csv". For example, the counting file corresponding to the "ACTB_ENST00000676189_kmers.csv" is named "ACTB_ENST00000676189_kmers_kmer_counts.csv".
+Additionally, corresponding counting CSV files have also been uploaded for each isoform. These counting files 
+contain the kmer counts for the respective isoform and are named after the isoform, followed by 
+"_kmers_kmer_counts.csv". For example, the counting file corresponding to the "ACTB_ENST00000676189_kmers.csv" 
+is named "ACTB_ENST00000676189_kmers_kmer_counts.csv".
