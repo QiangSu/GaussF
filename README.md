@@ -137,7 +137,13 @@ The interpretation of other files:
 
 The 'human_pc_gene.tsv' file contains an annotated list of human protein-coding genes, each associated with a unique sequence region at the isoform level. This dataset comprises a total of 20,818 distinct genes derived from Homo sapiens, systematically cataloged to facilitate research on genetic variation and isoform expression.
 
-The 'isoform_unique_50mer_summary_list.txt' details a comprehensive inventory of isoforms, including their names and corresponding 50-mer sequences associated with unique genomic regions. The summary encompasses 175,572 isoforms subjected to unique region screening. Out of these, 121,144 isoforms are characterized by unique sequences, while 54,428 isoforms lack distinct sequences, sharing regions with alternate isoforms.
+The 'hm_mrna_isoform_summary.txt' details a comprehensive inventory of isoforms, including 
+Transcript ID: Extracted from the filename by removing the '_kmers.csv' part, representing the gene name and transcript ID.
+Number of Kmers: The total count of unique kmers found in each corresponding CSV file.
+Global_Frequency: The frequency of the kmers across all sequences as found in the first data row of each corresponding CSV file.
+Present_in_Transcripts: A list of transcripts in which the kmers are present as found in the first data row of each corresponding CSV file.
+
+The summary encompasses 175,572 isoforms subjected to unique region screening. 
 
 The documentation provided in 'README_GaussF.md' offers a detailed guide for utilizing the GaussF Python script. The README delineates the functional scope of the script, prerequisites for execution, and step-by-step instructions to ensure accurate computational procedures for users pursuing studies in Gaussian filtering.
 
