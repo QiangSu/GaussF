@@ -145,10 +145,4 @@ Present_in_Transcripts: A list of transcripts in which the kmers are present as 
 
 The summary encompasses 175,572 isoforms subjected to unique region screening. 
 
-The documentation provided in 'README_GaussF.md' offers a detailed guide for utilizing the GaussF Python script. The README delineates the functional scope of the script, prerequisites for execution, and step-by-step instructions to ensure accurate computational procedures for users pursuing studies in Gaussian filtering.
-
-In 'README_kmer_counting.md', users will find thorough instructions for operating the k-mer counting Python script. This README document includes the script's purpose, system requirements, installation guidelines, and a comprehensive command-line interface (CLI) usage tutorial, facilitating precise k-mer analysis in genomic sequences.
-
-The 'README_reference_unique_sequence.md' serves as an instructional manual for the associated Python script that identifies unique sequences within reference genomes. It provides a clear exposition of the script's objectives, dependencies, configuration steps, and detailed execution commands, designed to aid researchers in pinpointing and studying unique genomic regions.
-
 We welcome contributions to this project and encourage users to submit issues or pull requests on our GitHub repository. Additionally, if you have any questions or comments about this script, please feel free to contact us via email.
