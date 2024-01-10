@@ -4,9 +4,9 @@ Overview:
 
 The GaussF pipeline is designed to accurately quantify transcript abundance at the isoform level using RNA-seq data. The algorithm leverages unique k-mer signatures to overcome common RNA-seq biases, employing a parametric Gaussian model for sophisticated bias correction. This methodology enables precise RPKM (Reads Per Kilobase of transcript, per Million mapped reads) estimates, facilitating in-depth transcriptomic analyses.
 
-Step 1: Unique k-mer Identification
+Step 1: minimal shared k-mer Identification
 
-The script isoform_unique_sequence-loop.py enumerates distinct k-mers for each transcript. The targeted transcript set is defined by the research focus and can be customized based on specific gene lists. Approximately 175,000 transcripts at the isoform level can be processed to assign unique genomic regions.
+The script kmer_frequency_distribution_mini_shared.py  enumerates distinct k-mers for each transcript. The targeted transcript set is defined by the research focus and can be customized based on specific gene lists. Approximately 175,000 transcripts at the isoform level can be processed to assign unique genomic regions.
 
 Step 2: k-mer Counting and Normalization
 
