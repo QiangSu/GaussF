@@ -51,7 +51,7 @@ def main(directory, output_directory, fastq_filepath, read_length, k):
 
         # Compute the filename of the corresponding kmer counts file
         basename = os.path.splitext(os.path.basename(kmer_filepath))[0]
-        kmer_counts_filename = f"{basename}_kmer_counts.csv"
+        kmer_counts_filename = f"{basename}_counts.csv"
         kmer_counts_filepath = os.path.join(directory, kmer_counts_filename)
 
         # Define the output file path in the output directory
