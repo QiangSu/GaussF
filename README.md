@@ -74,7 +74,8 @@ This tool is designed to handle large FASTQ files efficiently. By using parallel
 
 To enhance the computational performance of the k-mer counting process, particularly for large datasets such as genomic sequences, a dedicated C++ program, kmer_counter.cpp, has been developed. 
 
-Kmer Counter
+Kmer Counter(recommended)
+
 Overview
 Kmer Counter is a high-performance C++ application designed to rapidly count k-mer frequencies in large genomic datasets. Implementing optimized algorithms and leveraging the power of multi-threading, this tool offers significant speed enhancements over traditional k-mer counting techniques typically found in higher-level languages.
 
