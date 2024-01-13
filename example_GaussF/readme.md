@@ -13,9 +13,15 @@ python kmer_frequency_distribution_mini_shared.py --input /path/to/mart_export_A
 The specified CSV file in the directory ACTB_reference will be used to output the k-mer lists for each isoform.
 
 2. k-mer Counting and Normalization
+
 2.1 Counting k-mer Occurrences
 Run the following command to count k-mer occurrences in a FASTQ file and normalize these occurrences to get RPKM:
-python kmer_counting_loop.py --k 50 --threads 30 --chunk_size 10000000 --fastq /path/to/data.fastq.gz --kmer_dir /path/to/ACTB_reference --output /path/to/ACTB_reference
+
+./kmer_counter --kmer_dir /path/to/kmer_csv_dir --fastq_file /path/to/sequence.fastq.gz --output_dir /path/to/output_csv_dir --threads 4
+![image](https://github.com/QiangSu/GaussF/assets/30870950/3c32974f-c39f-4440-9bd3-9f72113d4af7)
+
+python kmer_counting_loop.py --k 50 --threads 30 --chunk_size 10000000 --fastq /path/to/data.fastq.gz --kmer_dir
+/path/to/ACTB_reference --output /path/to/ACTB_reference
 Note that the k-mer directory should be the same as the output directory.
 
 2.2 Normalizing Counted k-mer Occurrences
