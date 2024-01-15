@@ -4,6 +4,11 @@ from scipy.optimize import curve_fit
 from scipy.stats import norm
 import os
 import re
+import warnings
+from scipy.optimize import OptimizeWarning
+
+# Suppress the OptimizeWarning from SciPy
+warnings.simplefilter("ignore", OptimizeWarning)
 
 # Function to calculate the GC content percentage of a sequence
 def calculate_gc_content(seq):
