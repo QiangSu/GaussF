@@ -10,6 +10,8 @@ from scipy.optimize import OptimizeWarning
 # Suppress the OptimizeWarning from SciPy
 warnings.simplefilter("ignore", OptimizeWarning)
 
+warnings.simplefilter("ignore", RuntimeWarning)
+
 # Function to calculate the GC content percentage of a sequence
 def calculate_gc_content(seq):
     gc_count = seq.count('G') + seq.count('C')
@@ -20,9 +22,9 @@ def calculate_gc_content(seq):
 def gaussian_cdf(x, A0, A, xc, w):
     return A0 + A * norm.cdf((x - xc) / w)
 
-# Function to extract gene and transcript information from filename
+# Function to extract gene and transcript information from filename, including gene names with hyphens
 def extract_gene_transcript(file_name):
-    match = re.match(r'([A-Za-z0-9]+)_(ENST\d+)_.*\.csv$', file_name)
+    match = re.match(r'([A-Za-z0-9-]+)_(ENST\d+)_.*\.csv$', file_name)
     if match:
         return match.groups()
     else:
@@ -72,19 +74,30 @@ def main(input_folder, output_file_path, row_threshold):
 
         try:
             y_data = gc_content_grouped['sum'].cumsum()
-            initial_guess = [0, y_data.iloc[-1], gc_content_grouped['GC Content (%)'].mean(), gc_content_grouped['GC Content (%)'].std()]
-            popt, pcov = curve_fit(gaussian_cdf, gc_content_grouped['GC Content (%)'], y_data, p0=initial_guess, maxfev=9000)
+            initial_guess = [0, y_data.iloc[-1], gc_content_grouped['GC Content (%)'].mean(),
+                             gc_content_grouped['GC Content (%)'].std()]
+            popt, pcov = curve_fit(gaussian_cdf, gc_content_grouped['GC Content (%)'], y_data, p0=initial_guess,
+                                   maxfev=9000)
 
             # Check for a negative mean value and mean greater than standard deviation
             if popt[2] < 0 or popt[2] <= popt[3]:
                 raise ValueError("Negative mean or mean not greater than standard deviation")
 
+            # Check if the fitted amplitude is more than double the sum of individual values
+            if popt[1] > 2 * sum_frequency:
+                raise ValueError("Fitted amplitude is more than double the sum of individual values")
+
+            # Check if the standard deviation (popt[3]) is negative
+            if popt[3] < 0:
+                raise ValueError("Standard deviation is negative")
+
             # Fitting succeeded, so output normal results
             result_string = f"{gene_name},{transcript_id},{global_frequency},{present_transcripts},{popt[1]:.2f},{popt[2]:.2f},{popt[3]:.2f}\n"
         except (RuntimeError, ValueError) as e:
-            # Fitting failed or mean value is negative or not greater than standard deviation; output the sum of individual values
+            # Fitting failed or one of the checks did not pass; output the sum of individual values
             error_message = str(e)
-            result_string = format_unfit_output(gene_name, transcript_id, global_frequency, present_transcripts, sum_frequency, f"Fitting failed: {error_message}")
+            result_string = format_unfit_output(gene_name, transcript_id, global_frequency, present_transcripts,
+                                                sum_frequency, f"Fitting failed: {error_message}")
 
         with open(output_file_path, "a") as f_out:
             f_out.write(result_string)
