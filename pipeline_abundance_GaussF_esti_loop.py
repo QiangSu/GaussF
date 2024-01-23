@@ -9,7 +9,8 @@ import re
 parser = argparse.ArgumentParser(description="Analyze GC content and fit Gaussian CDF.")
 parser.add_argument('--input', type=str, required=True, help="Path to the input folder containing the CSV files.")
 parser.add_argument('--output', type=str, required=True, help="Path and name of the output file to save the results.")
-parser.add_argument('--threshold', type=int, default=10, help="Minimum number of k-mers required for fitting. Default is 10.")
+parser.add_argument('--threshold', type=int, default=10,
+                    help="Minimum number of k-mers required for fitting. Default is 10.")
 args = parser.parse_args()
 
 # GC content calculation function
@@ -23,8 +24,12 @@ def calculate_gc_content(kmer):
 def gaussian_cdf(x, A0, A, xc, w):
     return A0 + A * norm.cdf((x - xc) / w)
 
-# Gaussian CDF with fixed parameters
+# Gaussian CDF with fixed parameters for Normalized K-mer Count
 def gaussian_cdf_fixed(x, A0, A, xc_fixed, w_fixed):
+    return A0 + A * norm.cdf((x - xc_fixed) / w_fixed)
+
+# Gaussian CDF with fixed parameters for Count
+def gaussian_cdf_fixed_count(x, A0, A, xc_fixed, w_fixed):
     return A0 + A * norm.cdf((x - xc_fixed) / w_fixed)
 
 # Extract gene name and transcript ID from filename
@@ -54,13 +59,17 @@ for filename in os.listdir(args.input):
             print(f"'kmer' column is missing in file {filename}. Skipping this file.")
             continue
 
+        # Add the mini_shared_length value extracted from the first row of the DataFrame
+        mini_shared_length = df.at[0, 'Mini_Shared_Length']
+
         # Calculate and add GC content to the DataFrame
         df['GC_Content'] = df['kmer'].apply(calculate_gc_content)
 
         # Group by GC content and sum frequencies
         gc_content_data = df.groupby('GC_Content').agg({
             'Local_Frequency': 'sum',
-            'Normalized_K-mer_Count': 'sum'
+            'Normalized_K-mer_Count': 'sum',
+            'Count': 'sum'  # Sum the 'Count' column too
         }).reset_index()
 
         # Add the first row's Global_Frequency and Present_in_Transcripts to every result
@@ -70,13 +79,16 @@ for filename in os.listdir(args.input):
         # Check if there are at least args.threshold distinct GC contents
         if len(gc_content_data['GC_Content'].unique()) < args.threshold:
             sum_normalized_kmer_count = gc_content_data['Normalized_K-mer_Count'].sum()
+            sum_count = gc_content_data['Count'].sum()  # Calculate sum of the 'Count' column
             results.append({
                 'File': filename,
                 'Gene_Name': gene_name,
                 'Transcript_ID': transcript_id,
                 'Global_Frequency': global_frequency,
                 'Present_in_Transcripts': present_in_transcripts,
-                'Sum or Fitted A (Abundance)': '{:.2f}'.format(sum_normalized_kmer_count),
+                'Mini_Shared_Length': mini_shared_length,
+                'Sum or Fitted A (Abundance) for Normalized Count': '{:.2f}'.format(sum_normalized_kmer_count),
+                'Sum or Fitted A (Abundance) for Count': '{:.2f}'.format(sum_count),  # New result field for 'Count'
                 'Fixed Mean (xc)': 'N/A',
                 'Fixed Standard Deviation (w)': 'N/A',
                 'Report': 'Insufficient Data'
@@ -87,91 +99,74 @@ for filename in os.listdir(args.input):
         gc_content_data_sorted = gc_content_data.sort_values(by='GC_Content')
         gc_content_data_sorted['Cumulative_Local_Frequency'] = gc_content_data_sorted['Local_Frequency'].cumsum()
         gc_content_data_sorted['Cumulative_Normalized_Count'] = gc_content_data_sorted['Normalized_K-mer_Count'].cumsum()
+        gc_content_data_sorted['Cumulative_Count'] = gc_content_data_sorted['Count'].cumsum()  # Cumulative sum for 'Count'
 
         # Get the data for fitting
         x_data = gc_content_data_sorted['GC_Content']
         y_data_local = gc_content_data_sorted['Cumulative_Local_Frequency']
         y_data_normalized = gc_content_data_sorted['Cumulative_Normalized_Count']
+        y_data_count = gc_content_data_sorted['Cumulative_Count']  # Data for 'Count'
 
+        # Fit the Gaussian CDF to Cumulative Local Frequency to get initial xc and w
         initial_guesses_local = [min(y_data_local), max(y_data_local) - min(y_data_local), x_data.mean(), x_data.std()]
         try:
-            # Fit the Gaussian CDF to Cumulative Local Frequency
             popt_local, pcov_local = curve_fit(gaussian_cdf, x_data, y_data_local, p0=initial_guesses_local)
             A0_fitted_local, A_fitted_local, xc_fitted_local, w_fitted_local = popt_local
 
-            # Check if the fixed mean (xc) is more than twice the fixed standard deviation (w)
-            if xc_fitted_local > 1 * w_fitted_local:
-                # Proceed with normalized count fitting using fixed xc and w
-                initial_guesses_normalized = [min(y_data_normalized), max(y_data_normalized) - min(y_data_normalized)]
-                popt_normalized, pcov_normalized = curve_fit(
-                    lambda x, A0, A: gaussian_cdf_fixed(x, A0, A, xc_fitted_local, w_fitted_local),
-                    x_data,
-                    y_data_normalized,
-                    p0=initial_guesses_normalized
-                )
-                A0_fitted_normalized, A_fitted_normalized = popt_normalized
+            # Additional fitting for Normalized K-mer Count and Count using fixed xc and w
+            initial_guesses_normalized = [min(y_data_normalized), max(y_data_normalized) - min(y_data_normalized)]
+            popt_normalized, pcov_normalized = curve_fit(
+                lambda x, A0, A: gaussian_cdf_fixed(x, A0, A, xc_fitted_local, w_fitted_local),
+                x_data,
+                y_data_normalized,
+                p0=initial_guesses_normalized
+            )
+            A0_fitted_normalized, A_fitted_normalized = popt_normalized
 
-                # Append successful fitting result
-                results.append({
-                    'File': filename,
-                    'Gene_Name': gene_name,
-                    'Transcript_ID': transcript_id,
-                    'Global_Frequency': global_frequency,
-                    'Present_in_Transcripts': present_in_transcripts,
-                    'Sum or Fitted A (Abundance)': '{:.2f}'.format(A_fitted_normalized),
-                    'Fixed Mean (xc)': '{:.2f}'.format(xc_fitted_local),
-                    'Fixed Standard Deviation (w)': '{:.2f}'.format(w_fitted_local),
-                    'Report': 'OK'
-                })
-            else:
-                sum_normalized_kmer_count = y_data_normalized.sum()
-                results.append({
-                    'File': filename,
-                    'Gene_Name': gene_name,
-                    'Transcript_ID': transcript_id,
-                    'Global_Frequency': global_frequency,
-                    'Present_in_Transcripts': present_in_transcripts,
-                    'Sum or Fitted A (Abundance)': '{:.2f}'.format(sum_normalized_kmer_count),
-                    'Fixed Mean (xc)': 'N/A',
-                    'Fixed Standard Deviation (w)': 'N/A',
-                    'Report': 'Mean not more than SD'
-                })
+            initial_guesses_count = [min(y_data_count), max(y_data_count) - min(y_data_count)]
+            popt_count, pcov_count = curve_fit(
+                lambda x, A0, A: gaussian_cdf_fixed_count(x, A0, A, xc_fitted_local, w_fitted_local),
+                x_data,
+                y_data_count,
+                p0=initial_guesses_count
+            )
+            A0_fitted_count, A_fitted_count = popt_count
+
+            # Append successful fitting results
+            results.append({
+                'File': filename,
+                'Gene_Name': gene_name,
+                'Transcript_ID': transcript_id,
+                'Global_Frequency': global_frequency,
+                'Present_in_Transcripts': present_in_transcripts,
+                'Mini_Shared_Length': mini_shared_length,
+                'Sum or Fitted A (Abundance) for Normalized Count': '{:.2f}'.format(A_fitted_normalized),
+                'Sum or Fitted A (Abundance) for Count': '{:.2f}'.format(A_fitted_count),  # New result field for 'Count'
+                'Fixed Mean (xc)': '{:.2f}'.format(xc_fitted_local),
+                'Fixed Standard Deviation (w)': '{:.2f}'.format(w_fitted_local),
+                'Report': 'OK'
+            })
         except RuntimeError as e:
             error_message = str(e)
-            if "Optimal parameters not found" in error_message:
-                # Output the sum of individual values from the 'Normalized_K-mer_Count' column
-                sum_normalized_kmer_count = gc_content_data['Normalized_K-mer_Count'].sum()
-                results.append({
-                    'File': filename,
-                    'Gene_Name': gene_name,
-                    'Transcript_ID': transcript_id,
-                    'Global_Frequency': global_frequency,
-                    'Present_in_Transcripts': present_in_transcripts,
-                    'Sum or Fitted A (Abundance)': '{:.2f}'.format(sum_normalized_kmer_count),
-                    'Fixed Mean (xc)': 'N/A',
-                    'Fixed Standard Deviation (w)': 'N/A',
-                    'Report': 'Fit Failed - Optimal parameters not found'
-                })
-            else:
-                # For other types of RuntimeError (not related to optimization), you can decide how to handle these cases
-                results.append({
-                    'File': filename,
-                    'Gene_Name': gene_name,
-                    'Transcript_ID': transcript_id,
-                    'Global_Frequency': global_frequency,
-                    'Present_in_Transcripts': present_in_transcripts,
-                    'Sum or Fitted A (Abundance)': 'N/A',
-                    'Fixed Mean (xc)': 'N/A',
-                    'Fixed Standard Deviation (w)': 'N/A',
-                    'Report': f'Fit Failed - {error_message}'
-                })
-                
+            # Handle fitting failures. Potentially output sums as a fallback.
+            sum_normalized_kmer_count = gc_content_data_sorted['Normalized_K-mer_Count'].sum()
+            sum_count = gc_content_data_sorted['Count'].sum()
+            results.append({
+                'File': filename,
+                'Gene_Name': gene_name,
+                'Transcript_ID': transcript_id,
+                'Global_Frequency': global_frequency,
+                'Present_in_Transcripts': present_in_transcripts,
+                'Mini_Shared_Length': mini_shared_length,
+                'Sum or Fitted A (Abundance) for Normalized Count': '{:.2f}'.format(sum_normalized_kmer_count),
+                'Sum or Fitted A (Abundance) for Count': '{:.2f}'.format(sum_count),  # Result for 'Count' sum
+                'Fixed Mean (xc)': 'N/A',
+                'Fixed Standard Deviation (w)': 'N/A',
+                'Report': f'Fit Failed - {error_message}'
+            })
 
 # Create results DataFrame
 results_df = pd.DataFrame(results)
 
 # Save to CSV file specified by the command-line argument
 results_df.to_csv(args.output, index=False)
-
-# Print the results
-#print(results_df)
