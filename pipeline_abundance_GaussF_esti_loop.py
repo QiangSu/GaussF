@@ -5,6 +5,10 @@ from scipy.stats import norm
 import argparse
 import re
 
+# Define a function to judge the suitability of the mean before fitting
+def suitable_criteria_for_GC(xc_fitted_local, w_fitted_local):
+    return xc_fitted_local > w_fitted_local
+
 # Parse command line arguments
 parser = argparse.ArgumentParser(description="Analyze GC content and fit Gaussian CDF.")
 parser.add_argument('--input', type=str, required=True, help="Path to the input folder containing the CSV files.")
@@ -113,42 +117,47 @@ for filename in os.listdir(args.input):
             popt_local, pcov_local = curve_fit(gaussian_cdf, x_data, y_data_local, p0=initial_guesses_local)
             A0_fitted_local, A_fitted_local, xc_fitted_local, w_fitted_local = popt_local
 
-            # Additional fitting for Normalized K-mer Count and Count using fixed xc and w
-            initial_guesses_normalized = [min(y_data_normalized), max(y_data_normalized) - min(y_data_normalized)]
-            popt_normalized, pcov_normalized = curve_fit(
-                lambda x, A0, A: gaussian_cdf_fixed(x, A0, A, xc_fitted_local, w_fitted_local),
-                x_data,
-                y_data_normalized,
-                p0=initial_guesses_normalized
-            )
-            A0_fitted_normalized, A_fitted_normalized = popt_normalized
+            # Check if the fitted mean and standard deviation meet the suitability criteria
+            if suitable_criteria_for_GC(xc_fitted_local, w_fitted_local):
+                # Additional fitting for Normalized K-mer Count and Count using fixed xc and w
+                initial_guesses_normalized = [min(y_data_normalized), max(y_data_normalized) - min(y_data_normalized)]
+                popt_normalized, pcov_normalized = curve_fit(
+                    lambda x, A0, A: gaussian_cdf_fixed(x, A0, A, xc_fitted_local, w_fitted_local),
+                    x_data,
+                    y_data_normalized,
+                    p0=initial_guesses_normalized
+                )
+                A0_fitted_normalized, A_fitted_normalized = popt_normalized
 
-            initial_guesses_count = [min(y_data_count), max(y_data_count) - min(y_data_count)]
-            popt_count, pcov_count = curve_fit(
-                lambda x, A0, A: gaussian_cdf_fixed_count(x, A0, A, xc_fitted_local, w_fitted_local),
-                x_data,
-                y_data_count,
-                p0=initial_guesses_count
-            )
-            A0_fitted_count, A_fitted_count = popt_count
+                initial_guesses_count = [min(y_data_count), max(y_data_count) - min(y_data_count)]
+                popt_count, pcov_count = curve_fit(
+                    lambda x, A0, A: gaussian_cdf_fixed_count(x, A0, A, xc_fitted_local, w_fitted_local),
+                    x_data,
+                    y_data_count,
+                    p0=initial_guesses_count
+                )
+                A0_fitted_count, A_fitted_count = popt_count
 
-            # Append successful fitting results
-            results.append({
-                'File': filename,
-                'Gene_Name': gene_name,
-                'Transcript_ID': transcript_id,
-                'Global_Frequency': global_frequency,
-                'Present_in_Transcripts': present_in_transcripts,
-                'Mini_Shared_Length': mini_shared_length,
-                'Sum or Fitted A (Abundance) for Normalized Count': '{:.2f}'.format(A_fitted_normalized),
-                'Sum or Fitted A (Abundance) for Count': '{:.2f}'.format(A_fitted_count),  # New result field for 'Count'
-                'Fixed Mean (xc)': '{:.2f}'.format(xc_fitted_local),
-                'Fixed Standard Deviation (w)': '{:.2f}'.format(w_fitted_local),
-                'Report': 'OK'
-            })
-        except RuntimeError as e:
+                # Append successful fitting results
+                results.append({
+                    'File': filename,
+                    'Gene_Name': gene_name,
+                    'Transcript_ID': transcript_id,
+                    'Global_Frequency': global_frequency,
+                    'Present_in_Transcripts': present_in_transcripts,
+                    'Mini_Shared_Length': mini_shared_length,
+                    'Sum or Fitted A (Abundance) for Normalized Count': '{:.2f}'.format(A_fitted_normalized),
+                    'Sum or Fitted A (Abundance) for Count': '{:.2f}'.format(A_fitted_count),
+                    'Fixed Mean (xc)': '{:.2f}'.format(xc_fitted_local),
+                    'Fixed Standard Deviation (w)': '{:.2f}'.format(w_fitted_local),
+                    'Report': 'OK'
+                })
+            else:
+                raise ValueError("Unsuitable fit parameters: mean is not greater than standard deviation.")
+
+        except (RuntimeError, ValueError) as e:
             error_message = str(e)
-            # Handle fitting failures. Potentially output sums as a fallback.
+            # Handle fitting failures or unsuitable parameters. Potentially output sums as a fallback.
             sum_normalized_kmer_count = gc_content_data_sorted['Normalized_K-mer_Count'].sum()
             sum_count = gc_content_data_sorted['Count'].sum()
             results.append({
@@ -159,14 +168,14 @@ for filename in os.listdir(args.input):
                 'Present_in_Transcripts': present_in_transcripts,
                 'Mini_Shared_Length': mini_shared_length,
                 'Sum or Fitted A (Abundance) for Normalized Count': '{:.2f}'.format(sum_normalized_kmer_count),
-                'Sum or Fitted A (Abundance) for Count': '{:.2f}'.format(sum_count),  # Result for 'Count' sum
+                'Sum or Fitted A (Abundance) for Count': '{:.2f}'.format(sum_count),
                 'Fixed Mean (xc)': 'N/A',
                 'Fixed Standard Deviation (w)': 'N/A',
-                'Report': f'Fit Failed - {error_message}'
+                'Report': f'Fit Failed or Unsuitable Fit - {error_message}'
             })
 
-# Create results DataFrame
-results_df = pd.DataFrame(results)
+    # Create results DataFrame
+    results_df = pd.DataFrame(results)
 
-# Save to CSV file specified by the command-line argument
-results_df.to_csv(args.output, index=False)
+    # Save to CSV file specified by the command-line argument
+    results_df.to_csv(args.output, index=False)
