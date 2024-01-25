@@ -6,19 +6,19 @@ ACTB_ENST00000676397_kmers_merged_normalized.csv,ACTB,ENST00000676397,1,ACTB_ENS
 ACTB_ENST00000647275_kmers_merged_normalized.csv,ACTB,ENST00000647275,1,ACTB_ENST00000647275,45,0.00,0.00,62.36,6.54,OK
 ACTB_ENST00000645025_kmers_merged_normalized.csv,ACTB,ENST00000645025,2,ACTB_ENST00000477812-ACTB_ENST00000645025,6,0.00,0.00,N/A,N/A,Insufficient Data
 ACTB_ENST00000646584_kmers_merged_normalized.csv,ACTB,ENST00000646584,1,ACTB_ENST00000646584,282,0.37,257.78,61.21,6.60,OK
-ACTB_ENST00000642480_kmers_merged_normalized.csv,ACTB,ENST00000642480,1,ACTB_ENST00000642480,119,24.65,7258.00,N/A,N/A,Fit Failed - Optimal parameters not found: Number of calls to function has reached maxfev = 1000.
+ACTB_ENST00000642480_kmers_merged_normalized.csv,ACTB,ENST00000642480,1,ACTB_ENST00000642480,119,24.65,7258.00,N/A,N/A,Unsuitable Fit - Optimal parameters not found: Number of calls to function has reached maxfev = 1000.
 ACTB_ENST00000432588_kmers_merged_normalized.csv,ACTB,ENST00000432588,1,ACTB_ENST00000432588,147,8.60,3126.70,60.77,5.97,OK
 ACTB_ENST00000464611_kmers_merged_normalized.csv,ACTB,ENST00000464611,1,ACTB_ENST00000464611,48,0.02,1.87,42.40,2.38,OK
 ACTB_ENST00000414620_kmers_merged_normalized.csv,ACTB,ENST00000414620,1,ACTB_ENST00000414620,142,0.00,0.00,52.76,4.56,OK
-ACTB_ENST00000462494_kmers_merged_normalized.csv,ACTB,ENST00000462494,1,ACTB_ENST00000462494,54,46.46,6206.00,N/A,N/A,Fit Failed - Optimal parameters not found: Number of calls to function has reached maxfev = 1000.
-ACTB_ENST00000675515_kmers_merged_normalized.csv,ACTB,ENST00000675515,1,ACTB_ENST00000675515,185,0.14,66.00,N/A,N/A,Fit Failed - Optimal parameters not found: Number of calls to function has reached maxfev = 1000.
+ACTB_ENST00000462494_kmers_merged_normalized.csv,ACTB,ENST00000462494,1,ACTB_ENST00000462494,54,46.46,6206.00,N/A,N/A,Unsuitable Fit - Optimal parameters not found: Number of calls to function has reached maxfev = 1000.
+ACTB_ENST00000675515_kmers_merged_normalized.csv,ACTB,ENST00000675515,1,ACTB_ENST00000675515,185,0.14,66.00,N/A,N/A,Unsuitable Fit - Optimal parameters not found: Number of calls to function has reached maxfev = 1000.
 ACTB_ENST00000425660_kmers_merged_normalized.csv,ACTB,ENST00000425660,1,ACTB_ENST00000425660,43,0.41,44.00,N/A,N/A,Insufficient Data
 ACTB_ENST00000646664_kmers_merged_normalized.csv,ACTB,ENST00000646664,7,ACTB_ENST00000473257-ACTB_ENST00000674681-ACTB_ENST00000642480-ACTB_ENST00000646664-ACTB_ENST00000676189-ACTB_ENST00000676319-ACTB_ENST00000676397,3,1.62,12.00,N/A,N/A,Insufficient Data
-ACTB_ENST00000676189_kmers_merged_normalized.csv,ACTB,ENST00000676189,1,ACTB_ENST00000676189,49,0.00,0.00,N/A,N/A,Fit Failed - Optimal parameters not found: Number of calls to function has reached maxfev = 1000.
+ACTB_ENST00000676189_kmers_merged_normalized.csv,ACTB,ENST00000676189,1,ACTB_ENST00000676189,49,0.00,0.00,N/A,N/A,Unsuitable Fit - Optimal parameters not found: Number of calls to function has reached maxfev = 1000.
 ACTB_ENST00000484841_kmers_merged_normalized.csv,ACTB,ENST00000484841,2,ACTB_ENST00000493945-ACTB_ENST00000484841,46,1.26,143.16,78.92,1.99,OK
 ACTB_ENST00000493945_kmers_merged_normalized.csv,ACTB,ENST00000493945,2,ACTB_ENST00000493945-ACTB_ENST00000484841,46,1.26,143.16,78.92,1.99,OK
-ACTB_ENST00000473257_kmers_merged_normalized.csv,ACTB,ENST00000473257,1,ACTB_ENST00000473257,44,0.01,1.00,N/A,N/A,Fit Failed - Optimal parameters not found: Number of calls to function has reached maxfev = 1000.
+ACTB_ENST00000473257_kmers_merged_normalized.csv,ACTB,ENST00000473257,1,ACTB_ENST00000473257,44,0.01,1.00,N/A,N/A,Unsuitable Fit - Optimal parameters not found: Number of calls to function has reached maxfev = 1000.
 ACTB_ENST00000645576_kmers_merged_normalized.csv,ACTB,ENST00000645576,1,ACTB_ENST00000645576,44,0.00,0.00,60.57,1.64,OK
 ACTB_ENST00000480301_kmers_merged_normalized.csv,ACTB,ENST00000480301,2,ACTB_ENST00000480301-ACTB_ENST00000477812,178,13.86,6103.24,72.16,7.50,OK
-ACTB_ENST00000417101_kmers_merged_normalized.csv,ACTB,ENST00000417101,1,ACTB_ENST00000417101,81,4.48,898.00,N/A,N/A,Fit Failed - Optimal parameters not found: Number of calls to function has reached maxfev = 1000.
+ACTB_ENST00000417101_kmers_merged_normalized.csv,ACTB,ENST00000417101,1,ACTB_ENST00000417101,81,4.48,898.00,N/A,N/A,Unsuitable Fit - Optimal parameters not found: Number of calls to function has reached maxfev = 1000.
 ACTB_ENST00000477812_kmers_merged_normalized.csv,ACTB,ENST00000477812,2,ACTB_ENST00000462494-ACTB_ENST00000477812,260,35.10,22578.67,50.81,6.76,OK
