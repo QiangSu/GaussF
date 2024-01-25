@@ -171,7 +171,7 @@ for filename in os.listdir(args.input):
                 'Sum or Fitted A (Abundance) for Count': '{:.2f}'.format(sum_count),
                 'Fixed Mean (xc)': 'N/A',
                 'Fixed Standard Deviation (w)': 'N/A',
-                'Report': f'Fit Failed or Unsuitable Fit - {error_message}'
+                'Report': f'Unsuitable Fit - {error_message}'
             })
 
     # Create results DataFrame
