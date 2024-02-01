@@ -7,7 +7,7 @@ import re
 
 # Define a function to judge the suitability of the mean before fitting
 def suitable_criteria_for_GC(xc_fitted_local, w_fitted_local):
-    return xc_fitted_local > 0.2 * w_fitted_local
+    return xc_fitted_local > 0.5 * w_fitted_local
 
 # Parse command line arguments
 parser = argparse.ArgumentParser(description="Analyze GC content and fit Gaussian CDF.")
