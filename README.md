@@ -5,9 +5,9 @@ $\color{red}{GaussF}$ Transcript Quantification Pipeline
 
 The GaussF pipeline is designed to accurately quantify transcript abundance at the isoform level using RNA-seq data. The algorithm leverages unique k-mer signatures to overcome common RNA-seq biases, employing a parametric Gaussian model for sophisticated bias correction. This methodology enables precise k-mer count, TPM or RPKM estimates, facilitating in-depth transcriptomic analyses.
 ***
-### **Step 1: transcriptome K-mer Analysis**
+### **Step 1: minimal-shared `region filtering`**
 
-## $\colorbox{green}{{\color{white}{kmer_frequency_distribution_mini_shared.py}}}$ kmer_frequency_distribution_mini_shared.py (isoform_unique_sequence-loop.py)
+kmer_frequency_distribution_mini_shared.py (isoform_unique_sequence-loop.py)
 
 This tool processes a FASTA file containing transcript sequences and outputs a set of CSV files that summarize the k-mer content for each transcript. Each CSV file contains a list of k-mers of specified length that are present in the transcript, along with their local and global frequency, and information on which transcripts each k-mer is present in.
 
