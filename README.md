@@ -1,6 +1,8 @@
 # GaussF
 GaussF Transcript Quantification Pipeline
 
+$\colorbox{red}{GaussF}$ Transcript Quantification Pipeline
+
 ## Overview:
 
 The GaussF pipeline is designed to accurately quantify transcript abundance at the isoform level using RNA-seq data. The algorithm leverages unique k-mer signatures to overcome common RNA-seq biases, employing a parametric Gaussian model for sophisticated bias correction. This methodology enables precise k-mer count, TPM or RPKM estimates, facilitating in-depth transcriptomic analyses.
@@ -153,7 +155,7 @@ Command-Line Arguments
 Output
 The script will output a CSV file containing the following columns:
 
-> [!warning] 
+> [!note] 
 File: The name of the input CSV file that was processed to generate the corresponding row in the output file. It is used to trace back the results to the input data.
 
 Gene_Name: This is the name of the gene that the k-mers are associated with, typically extracted from the filename of the input CSV file according to a predetermined naming convention.
