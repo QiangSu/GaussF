@@ -114,6 +114,11 @@ Efficiently calculates normalization factors and processes large datasets.<br>
 
 Example usage:
 This script accepts command-line arguments to specify the input and output directories, the FASTQ file path, the read length, and the k-mer size. Here's how to run the script:
+For TPM
+```python
+python ./scripts/merge_normalized_isoform_count_TPM.py --directory ./data/input --output_directory ./data/output --read_length 150 --k 50
+```
+For RPKM
 ```python
 python merge_normalize_isoform_count_v1.py --directory <input_directory as the output directory of last kmer_counter.py script> --output_directory <output_directory new directory> --fastq <path_to_FASTQ.GZ> --read_length 150 --k 50
 ```
