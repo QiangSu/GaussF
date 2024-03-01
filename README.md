@@ -5,7 +5,7 @@ GaussF Transcript Quantification Pipeline
 
 The GaussF pipeline is designed to accurately quantify transcript abundance at the isoform level using RNA-seq data. The algorithm leverages unique k-mer signatures to overcome common RNA-seq biases, employing a parametric Gaussian model for sophisticated bias correction. This methodology enables precise k-mer count, TPM or RPKM estimates, facilitating in-depth transcriptomic analyses.
 ***
-**Step 1: transcriptome K-mer Analysis**
+### **Step 1: transcriptome K-mer Analysis**
 
 kmer_frequency_distribution_mini_shared.py (isoform_unique_sequence-loop.py )
 
@@ -39,7 +39,7 @@ In the output CSV files for each transcript, only k-mers that have the smallest 
 
 If the global frequency of a k-mer is 1, indicating that it is unique to a single transcript, then the 'Present_in_Transcripts' field will only contain the identifier of that specific transcript.
 ***
-**Step 2.1: k-mer Counting and Normalization**
+### **Step 2.1: k-mer Counting and Normalization**
 
 Kmer Counter(recommended)
 
@@ -99,7 +99,7 @@ Performance
 This tool is designed to handle large FASTQ files efficiently. By using parallel processing, the script splits the FASTQ file into chunks and processes each chunk in a separate CPU core, speeding up the counting operation significantly. The time taken will be printed at the end of the execution for each k-mer count task.
 
 
-**Step 2.2: K-mer Counts Merging and Normalization**
+### **Step 2.2: K-mer Counts Merging and Normalization**
 
 merge_mormalize_isoform_count_v1.py
 
@@ -125,7 +125,7 @@ Command-Line Arguments
 Output
 For each *_kmers.csv file in the input directory, the script will save a corresponding *_merged_normalized.csv file in the output directory. This file will contain the original k-mer data, the raw count, and an additional column with normalized k-mer counts.
 ***
-**Step 3: Gaussian CDF Fitting for GC Content and Abundance Estimation**
+### **Step 3: Gaussian CDF Fitting for GC Content and Abundance Estimation**
 
 pipeline_abundance_GaussF_esti_loop.py
 
