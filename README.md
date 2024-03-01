@@ -24,7 +24,7 @@ CSV Output Content: Generate a CSV file for each isoform with the following colu
 Usage
 To use this tool, you need to have Python installed on your system. The script requires a FASTA file with the transcript sequences as input and a directory path where the CSV files will be saved as output.
 
-Execute the script with the necessary arguments from the command line. For example:
+Execute the script with the necessary arguments from the command line. For example:<br>
 ```python
 python kmer_frequency_distribution_mini_shared.py --input path/to/your/ACTB_reference/mart_export_ACTB.txt --output path/to/output/directory/
 ```
