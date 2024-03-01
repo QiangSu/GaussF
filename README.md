@@ -144,7 +144,7 @@ Offers flexibility through user-defined minimum thresholds for k-mer counts appr
 
 Example usage:
 
-python pipeline_abundance_GaussF_esti_loop.py --threshold 5 --input /path/to/merge_data --output / path/to/merge_data/results_file.csv
+`python pipeline_abundance_GaussF_esti_loop.py --threshold 5 --input /path/to/merge_data --output / path/to/merge_data/results_file.csv`
 
 Command-Line Arguments
 --input: The path to the input folder containing the k-mer CSV files where each file should have a filename format including gene and transcript IDs (e.g., GENE_ENST00001234567_kmers.csv) (required).
@@ -153,6 +153,7 @@ Command-Line Arguments
 Output
 The script will output a CSV file containing the following columns:
 
+> [!warning] 
 File: The name of the input CSV file that was processed to generate the corresponding row in the output file. It is used to trace back the results to the input data.
 
 Gene_Name: This is the name of the gene that the k-mers are associated with, typically extracted from the filename of the input CSV file according to a predetermined naming convention.
