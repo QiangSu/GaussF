@@ -26,7 +26,7 @@ To use this tool, you need to have Python installed on your system. The script r
 
 Execute the script with the necessary arguments from the command line. For example:
 
-```python kmer_frequency_distribution_mini_shared.py --input path/to/your/ACTB_reference/mart_export_ACTB.txt --output path/to/output/directory/```
+`python kmer_frequency_distribution_mini_shared.py --input path/to/your/ACTB_reference/mart_export_ACTB.txt --output path/to/output/directory/`
 
 Command-Line Arguments
 --input: Path to the input FASTA file containing transcript sequences.
@@ -55,7 +55,7 @@ Generate output CSV files containing the count of each k-mer.
 Usage
 To use this tool, you need to provide several command-line arguments. Here is the syntax for running the script:
 
-python kmer_counting_loop.py --k <kmer_size> --chunk_size <chunk_size> --fastq <fastq_file_path> --kmer_dir <kmer_directory> --output <output_directory> [--threads <number_of_threads>]
+`python kmer_counting_loop.py --k <kmer_size> --chunk_size <chunk_size> --fastq <fastq_file_path> --kmer_dir <kmer_directory> --output <output_directory> [--threads <number_of_threads>]`
 
 Command-Line Arguments
 --k: Size of the k-mer you wish to count (required).
@@ -95,7 +95,7 @@ POSIX threads (pthreads): For multi-threading support.
 Usage
 To use Kmer Counter, compile the source code and run the resulting binary with the required arguments specifying the k-mer CSV directory, the input FASTQ gzipped file, the output directory for counts, and the number of threads.
 
-./kmer_counter --kmer_dir <kmer_csv_dir> --fastq_file <fastq_gz_file> --output_dir <output_csv_dir> --threads <number_of_threads>
+`./kmer_counter --kmer_dir <kmer_csv_dir> --fastq_file <fastq_gz_file> --output_dir <output_csv_dir> --threads <number_of_threads>`
 
 // Compile this with:
 // g++ -std=c++17 -o kmer_counter kmer_counter.cpp -lz -lpthread
