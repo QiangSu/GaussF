@@ -7,7 +7,7 @@ The GaussF pipeline is designed to accurately quantify transcript abundance at t
 ***
 ### **Step 1: transcriptome K-mer Analysis**
 
-kmer_frequency_distribution_mini_shared.py (isoform_unique_sequence-loop.py)
+$\color{magenta}{kmer_frequency_distribution_mini_shared.py}$ kmer_frequency_distribution_mini_shared.py (isoform_unique_sequence-loop.py)
 
 This tool processes a FASTA file containing transcript sequences and outputs a set of CSV files that summarize the k-mer content for each transcript. Each CSV file contains a list of k-mers of specified length that are present in the transcript, along with their local and global frequency, and information on which transcripts each k-mer is present in.
 
