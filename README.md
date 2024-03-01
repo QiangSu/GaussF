@@ -1,7 +1,6 @@
 # GaussF
-GaussF Transcript Quantification Pipeline
+$\color{red}{GaussF}$ Transcript Quantification Pipeline
 
-$\color{green}{GaussF}$
 ## Overview:
 
 The GaussF pipeline is designed to accurately quantify transcript abundance at the isoform level using RNA-seq data. The algorithm leverages unique k-mer signatures to overcome common RNA-seq biases, employing a parametric Gaussian model for sophisticated bias correction. This methodology enables precise k-mer count, TPM or RPKM estimates, facilitating in-depth transcriptomic analyses.
