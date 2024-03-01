@@ -1,7 +1,7 @@
 # GaussF
 GaussF Transcript Quantification Pipeline
 
-Overview:
+## Overview:
 
 The GaussF pipeline is designed to accurately quantify transcript abundance at the isoform level using RNA-seq data. The algorithm leverages unique k-mer signatures to overcome common RNA-seq biases, employing a parametric Gaussian model for sophisticated bias correction. This methodology enables precise k-mer count, TPM or RPKM estimates, facilitating in-depth transcriptomic analyses.
 ***
@@ -41,6 +41,32 @@ If the global frequency of a k-mer is 1, indicating that it is unique to a singl
 ***
 **Step 2.1: k-mer Counting and Normalization**
 
+Kmer Counter(recommended)
+
+Overview
+Kmer Counter is a high-performance C++ application designed to rapidly count k-mer frequencies in large genomic datasets. Implementing optimized algorithms and leveraging the power of multi-threading, this tool offers significant speed enhancements over traditional k-mer counting techniques typically found in higher-level languages.
+
+The tool reads k-mers from CSV files and processes gzipped FASTQ files to provide comprehensive k-mer counts. It has been carefully engineered to handle large sequencing data efficiently, making the best use of modern multi-core processors.
+
+Features
+High-throughput k-mer counting from gzipped FASTQ files.
+Multithreading support to take advantage of multiple CPU cores.
+Atomic operations for thread-safe counting without significant locking overhead.
+Streamlined I/O with buffered reads and writes for optimal performance.
+User-friendly command-line interface for easy integration into genomics workflows.
+
+Dependencies
+zlib: For reading gzipped FASTQ files.
+C++17 filesystem library: For convenient file and directory manipulation.
+POSIX threads (pthreads): For multi-threading support.
+Usage
+To use Kmer Counter, compile the source code and run the resulting binary with the required arguments specifying the k-mer CSV directory, the input FASTQ gzipped file, the output directory for counts, and the number of threads.
+
+`./kmer_counter --kmer_dir <kmer_csv_dir> --fastq_file <fastq_gz_file> --output_dir <output_csv_dir> --threads <number_of_threads>`
+
+// Compile this with:
+// g++ -std=c++17 -o kmer_counter kmer_counter.cpp -lz -lpthread
+
 kmer_counting_loop.py
 
 Introduction
@@ -71,35 +97,6 @@ Output
 The script will output CSV files in the specified output directory, with each file named according to the original k-mer CSV file but appended with _kmer_counts. For example, if there is an input file named sample_kmers.csv, the output file will be sample_kmers_kmer_counts.csv. Each output file will contain two columns: K-mer and Count, where Count is the frequency of that k-mer in the FASTQ file.
 Performance
 This tool is designed to handle large FASTQ files efficiently. By using parallel processing, the script splits the FASTQ file into chunks and processes each chunk in a separate CPU core, speeding up the counting operation significantly. The time taken will be printed at the end of the execution for each k-mer count task.
-
-To enhance the computational performance of the k-mer counting process, particularly for large datasets such as genomic sequences, a dedicated C++ program, kmer_counter.cpp, has been developed. 
-
-Kmer Counter(recommended)
-
-Overview
-Kmer Counter is a high-performance C++ application designed to rapidly count k-mer frequencies in large genomic datasets. Implementing optimized algorithms and leveraging the power of multi-threading, this tool offers significant speed enhancements over traditional k-mer counting techniques typically found in higher-level languages.
-
-The tool reads k-mers from CSV files and processes gzipped FASTQ files to provide comprehensive k-mer counts. It has been carefully engineered to handle large sequencing data efficiently, making the best use of modern multi-core processors.
-
-Features
-High-throughput k-mer counting from gzipped FASTQ files.
-Multithreading support to take advantage of multiple CPU cores.
-Atomic operations for thread-safe counting without significant locking overhead.
-Streamlined I/O with buffered reads and writes for optimal performance.
-User-friendly command-line interface for easy integration into genomics workflows.
-
-Dependencies
-zlib: For reading gzipped FASTQ files.
-C++17 filesystem library: For convenient file and directory manipulation.
-POSIX threads (pthreads): For multi-threading support.
-Usage
-To use Kmer Counter, compile the source code and run the resulting binary with the required arguments specifying the k-mer CSV directory, the input FASTQ gzipped file, the output directory for counts, and the number of threads.
-
-`./kmer_counter --kmer_dir <kmer_csv_dir> --fastq_file <fastq_gz_file> --output_dir <output_csv_dir> --threads <number_of_threads>`
-
-// Compile this with:
-// g++ -std=c++17 -o kmer_counter kmer_counter.cpp -lz -lpthread
-
 
 
 **Step 2.2: K-mer Counts Merging and Normalization**
