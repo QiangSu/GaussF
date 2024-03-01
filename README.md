@@ -5,7 +5,7 @@ Overview:
 
 The GaussF pipeline is designed to accurately quantify transcript abundance at the isoform level using RNA-seq data. The algorithm leverages unique k-mer signatures to overcome common RNA-seq biases, employing a parametric Gaussian model for sophisticated bias correction. This methodology enables precise RPKM (Reads Per Kilobase of transcript, per Million mapped reads) estimates, facilitating in-depth transcriptomic analyses.
 ***
-Step 1: transcriptome K-mer Analysis
+**Step 1: transcriptome K-mer Analysis**
 
 kmer_frequency_distribution_mini_shared.py (isoform_unique_sequence-loop.py )
 
