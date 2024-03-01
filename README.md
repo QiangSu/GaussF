@@ -38,7 +38,7 @@ For each transcript in the input FASTA file, the script will create a correspond
 In the output CSV files for each transcript, only k-mers that have the smallest global frequency for that transcript are included. If multiple k-mers share the same smallest global frequency, then all such k-mers are included in the CSV file. The 'Present_in_Transcripts' field in the CSV may include multiple transcript names, indicating that those transcripts share the k-mer.
 
 If the global frequency of a k-mer is 1, indicating that it is unique to a single transcript, then the 'Present_in_Transcripts' field will only contain the identifier of that specific transcript.
-
+***
 Step 2.1: k-mer Counting and Normalization
 
 kmer_counting_loop.py
@@ -127,7 +127,7 @@ Command-Line Arguments
 --k: The length of the k-mers used during the counting process (default is 50).
 Output
 For each *_kmers.csv file in the input directory, the script will save a corresponding *_merged_normalized.csv file in the output directory. This file will contain the original k-mer data, the raw count, and an additional column with normalized k-mer counts.
-
+***
 Step 3: Gaussian CDF Fitting for GC Content and Abundance Estimation
 
 pipeline_abundance_GaussF_esti_loop.py
