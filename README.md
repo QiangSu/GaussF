@@ -28,7 +28,7 @@ Execute the script with the necessary arguments from the command line. For examp
 
 `python kmer_frequency_distribution_mini_shared.py --input path/to/your/ACTB_reference/mart_export_ACTB.txt --output path/to/output/directory/`
 
-Command-Line Arguments
+  Command-Line Arguments
   --input: Path to the input FASTA file containing transcript sequences (https://useast.ensembl.org/biomart/martview/aeb3390f02325ab7951be9a7d6daaa42). 
   --output: Path to the output directory where CSV files for each transcript will be saved.
 
