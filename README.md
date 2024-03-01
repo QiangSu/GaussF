@@ -9,8 +9,6 @@ The GaussF pipeline is designed to accurately quantify transcript abundance at t
 
 kmer_frequency_distribution_mini_shared.py (isoform_unique_sequence-loop.py)
 
-$${\color{red}kmer_frequency_distribution_mini_shared.py}$$
-
 This tool processes a FASTA file containing transcript sequences and outputs a set of CSV files that summarize the k-mer content for each transcript. Each CSV file contains a list of k-mers of specified length that are present in the transcript, along with their local and global frequency, and information on which transcripts each k-mer is present in.
 
 Features
@@ -125,6 +123,8 @@ Command-Line Arguments
 --read_length: The length of the reads in the FASTQ sequences, necessary for normalization (default is 150).
 --k: The length of the k-mers used during the counting process (default is 50).
 Output
+
+> [!note] 
 For each *_kmers.csv file in the input directory, the script will save a corresponding *_merged_normalized.csv file in the output directory. This file will contain the original k-mer data, the raw count, and an additional column with normalized k-mer counts.
 ***
 ### **Step 3: Gaussian CDF Fitting for GC Content and Abundance Estimation**
