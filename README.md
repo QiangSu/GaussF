@@ -39,7 +39,7 @@ In the output CSV files for each transcript, only k-mers that have the smallest 
 
 If the global frequency of a k-mer is 1, indicating that it is unique to a single transcript, then the 'Present_in_Transcripts' field will only contain the identifier of that specific transcript.
 ***
-Step 2.1: k-mer Counting and Normalization
+**Step 2.1: k-mer Counting and Normalization**
 
 kmer_counting_loop.py
 
@@ -102,7 +102,7 @@ To use Kmer Counter, compile the source code and run the resulting binary with t
 
 
 
-Step 2.2: K-mer Counts Merging and Normalization
+**Step 2.2: K-mer Counts Merging and Normalization**
 
 merge_mormalize_isoform_count_v1.py
 
@@ -117,7 +117,7 @@ Efficiently calculates normalization factors and processes large datasets.
 Example usage:
 This script accepts command-line arguments to specify the input and output directories, the FASTQ file path, the read length, and the k-mer size. Here's how to run the script:
 
-python merge_normalize_isoform_count_v1.py --directory <input_directory as the output directory of last kmer_counter.py script> --output_directory <output_directory new directory> --fastq <path_to_FASTQ.GZ> --read_length 150 --k 50
+`python merge_normalize_isoform_count_v1.py --directory <input_directory as the output directory of last kmer_counter.py script> --output_directory <output_directory new directory> --fastq <path_to_FASTQ.GZ> --read_length 150 --k 50`
 
 Command-Line Arguments
 --directory: The directory containing the *_kmers.csv and corresponding *_kmer_counts.csv files (required). This directory is same as the output directory from the last script (kmer_counting_loop.py).
@@ -128,7 +128,7 @@ Command-Line Arguments
 Output
 For each *_kmers.csv file in the input directory, the script will save a corresponding *_merged_normalized.csv file in the output directory. This file will contain the original k-mer data, the raw count, and an additional column with normalized k-mer counts.
 ***
-Step 3: Gaussian CDF Fitting for GC Content and Abundance Estimation
+**Step 3: Gaussian CDF Fitting for GC Content and Abundance Estimation**
 
 pipeline_abundance_GaussF_esti_loop.py
 
