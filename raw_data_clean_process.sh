@@ -73,7 +73,7 @@ echo "Samtools SAM to Sorted BAM conversion and indexing done for all samples."
 #7. Cufflinks for transcript assembly
 while read sample
 do
-    cufflinks -p 10 -o "${CUFFLINKS_OUTPUT_DIR}/${sample}" "${OUTPUT_DIR}/${sample}_sorted.bam"
+    cufflinks -p 10 -o "${CUFFLINKS_OUTPUT_DIR}/${sample}" "${OUTPUT_DIR}/${sample}_sorted.bam" -b /home/boot/qiangsu/ref/Homo_sapiens.GRCh38.dna.primary_assembly.fa 
 done < "$SAMPLELIST"
 echo "Cufflinks transcript assembly done for all samples."
 
@@ -129,6 +129,7 @@ do
           -1 "${OUTPUT_DIR}/${sample}_cutadapt_trim_1P.fq" \
           -2 "${OUTPUT_DIR}/${sample}_cutadapt_trim_2P.fq" \
           -p 8 --validateMappings \
+          --gcBias \
           -o "${SALMON_OUTPUT_DIR}/${sample}"
 done < "$SAMPLELIST"
 echo "Salmon quantification done for all samples."
@@ -138,6 +139,7 @@ while read sample
 do
     # Assuming 'trimmomatic' produced trimmed FASTQ files
     kallisto quant -i "$KALLISTO_INDEX" -o "${KALLISTO_OUTPUT_DIR}/${sample}" \
+          --bias \
           -b 100 \
           --threads=8 \
           "${OUTPUT_DIR}/${sample}_cutadapt_trim_1P.fq" \
