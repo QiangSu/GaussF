@@ -26,7 +26,7 @@ To use this tool, you need to have Python installed on your system. The script r
 
 Execute the script with the necessary arguments from the command line. For example:
 ```
-`python kmer_frequency_distribution_mini_shared.py --input path/to/your/ACTB_reference/mart_export_ACTB.txt --output path/to/output/directory/`
+python kmer_frequency_distribution_mini_shared.py --input path/to/your/ACTB_reference/mart_export_ACTB.txt --output path/to/output/directory/
 ```
 Command-Line Arguments<br>
 --input: Path to the input FASTA file containing transcript sequences (https://useast.ensembl.org/biomart/martview/aeb3390f02325ab7951be9a7d6daaa42).<br> 
@@ -62,9 +62,9 @@ C++17 filesystem library: For convenient file and directory manipulation.<br>
 POSIX threads (pthreads): For multi-threading support.<br>
 Usage
 To use Kmer Counter, compile the source code and run the resulting binary with the required arguments specifying the k-mer CSV directory, the input FASTQ gzipped file, the output directory for counts, and the number of threads.
-
-`./kmer_counter --kmer_dir <kmer_csv_dir> --fastq_file <fastq_gz_file> --output_dir <output_csv_dir> --threads <number_of_threads>`
-
+```
+./kmer_counter --kmer_dir <kmer_csv_dir> --fastq_file <fastq_gz_file> --output_dir <output_csv_dir> --threads <number_of_threads>
+```
 // Compile this with:<br>
 // g++ -std=c++17 -o kmer_counter kmer_counter.cpp -lz -lpthread
 
@@ -81,9 +81,9 @@ Generate output CSV files containing the count of each k-mer.<br>
 
 Usage
 To use this tool, you need to provide several command-line arguments. Here is the syntax for running the script:
-
-`python kmer_counting_loop.py --k <kmer_size> --chunk_size <chunk_size> --fastq <fastq_file_path> --kmer_dir <kmer_directory> --output <output_directory> [--threads <number_of_threads>]`
-
+```
+python kmer_counting_loop.py --k <kmer_size> --chunk_size <chunk_size> --fastq <fastq_file_path> --kmer_dir <kmer_directory> --output <output_directory> [--threads <number_of_threads>]
+```
 Command-Line Arguments<br>
 --k: Size of the k-mer you wish to count (required).<br>
 --chunk_size: Number of records from the FASTQ file to be processed in each parallel chunk (required).<br>
@@ -114,9 +114,9 @@ Efficiently calculates normalization factors and processes large datasets.<br>
 
 Example usage:
 This script accepts command-line arguments to specify the input and output directories, the FASTQ file path, the read length, and the k-mer size. Here's how to run the script:
-
-`python merge_normalize_isoform_count_v1.py --directory <input_directory as the output directory of last kmer_counter.py script> --output_directory <output_directory new directory> --fastq <path_to_FASTQ.GZ> --read_length 150 --k 50`
-
+```
+python merge_normalize_isoform_count_v1.py --directory <input_directory as the output directory of last kmer_counter.py script> --output_directory <output_directory new directory> --fastq <path_to_FASTQ.GZ> --read_length 150 --k 50
+```
 Command-Line Arguments
 --directory: The directory containing the *_kmers.csv and corresponding *_kmer_counts.csv files (required). This directory is same as the output directory from the last script (kmer_counting_loop.py).
 --output_directory: The directory where the merged and normalized CSV files will be saved (required). The output directory should be to a new directory for further GaussF workflow.
@@ -143,9 +143,9 @@ Produces structured output for quick assessment of fit success and estimated par
 Offers flexibility through user-defined minimum thresholds for k-mer counts appropriate for fitting.
 
 Example usage:
-
-`python pipeline_abundance_GaussF_esti_loop.py --threshold 5 --input /path/to/merge_data --output / path/to/merge_data/results_file.csv`
-
+```
+python pipeline_abundance_GaussF_esti_loop.py --threshold 5 --input /path/to/merge_data --output / path/to/merge_data/results_file.csv
+```
 Command-Line Arguments<br>
 --input: The path to the input folder containing the k-mer CSV files where each file should have a filename format including gene and transcript IDs (e.g., GENE_ENST00001234567_kmers.csv) (required).<br>
 --output: The full path and name of the output CSV file where the results will be saved (required).<br>
