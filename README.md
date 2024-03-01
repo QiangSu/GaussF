@@ -41,6 +41,7 @@ If the global frequency of a k-mer is 1, indicating that it is unique to a singl
 ***
 ### **Step 2.1: k-mer Counting and Normalization**
 
+> [!important]  
 Kmer Counter(recommended)
 
 Overview
@@ -125,7 +126,7 @@ Command-Line Arguments
 Output
 
 > [!note] 
-For each *_kmers.csv file in the input directory, the script will save a corresponding *_merged_normalized.csv file in the output directory. This file will contain the original k-mer data, the raw count, and an additional column with normalized k-mer counts.
+> For each *_kmers.csv file in the input directory, the script will save a corresponding *_merged_normalized.csv file in the output directory. This file will contain the original k-mer data, the raw count, and > an additional column with normalized k-mer counts.
 ***
 ### **Step 3: Gaussian CDF Fitting for GC Content and Abundance Estimation**
 
