@@ -25,7 +25,7 @@ Usage
 To use this tool, you need to have Python installed on your system. The script requires a FASTA file with the transcript sequences as input and a directory path where the CSV files will be saved as output.
 
 Execute the script with the necessary arguments from the command line. For example:
-```
+```python
 python kmer_frequency_distribution_mini_shared.py --input path/to/your/ACTB_reference/mart_export_ACTB.txt --output path/to/output/directory/
 ```
 Command-Line Arguments<br>
@@ -62,7 +62,7 @@ C++17 filesystem library: For convenient file and directory manipulation.<br>
 POSIX threads (pthreads): For multi-threading support.<br>
 Usage
 To use Kmer Counter, compile the source code and run the resulting binary with the required arguments specifying the k-mer CSV directory, the input FASTQ gzipped file, the output directory for counts, and the number of threads.
-```
+```cpp
 ./kmer_counter --kmer_dir <kmer_csv_dir> --fastq_file <fastq_gz_file> --output_dir <output_csv_dir> --threads <number_of_threads>
 ```
 // Compile this with:<br>
@@ -81,7 +81,7 @@ Generate output CSV files containing the count of each k-mer.<br>
 
 Usage
 To use this tool, you need to provide several command-line arguments. Here is the syntax for running the script:
-```
+```python
 python kmer_counting_loop.py --k <kmer_size> --chunk_size <chunk_size> --fastq <fastq_file_path> --kmer_dir <kmer_directory> --output <output_directory> [--threads <number_of_threads>]
 ```
 Command-Line Arguments<br>
@@ -114,7 +114,7 @@ Efficiently calculates normalization factors and processes large datasets.<br>
 
 Example usage:
 This script accepts command-line arguments to specify the input and output directories, the FASTQ file path, the read length, and the k-mer size. Here's how to run the script:
-```
+```python
 python merge_normalize_isoform_count_v1.py --directory <input_directory as the output directory of last kmer_counter.py script> --output_directory <output_directory new directory> --fastq <path_to_FASTQ.GZ> --read_length 150 --k 50
 ```
 Command-Line Arguments
