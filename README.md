@@ -26,7 +26,7 @@ Installation
 To install the specific version (0.1.1) of the package `minimal-shared-kmers` using pip, run the following command in your terminal:
 
 ```bash
-pip install minimal-shared-kmers==0.1.1
+pip install minimal-shared-kmers
 ```
 Usage
 To use this tool, you need to have Python installed on your system. The script requires a FASTA file with the transcript sequences as input and a directory path where the CSV files will be saved as output.
