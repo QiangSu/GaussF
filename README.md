@@ -21,6 +21,13 @@ CSV Output Content: Generate a CSV file for each isoform with the following colu
 'Global_Frequency': The number of transcripts that contain the k-mer across the entire transcriptome.<br>
 'Present_in_Transcripts': A list of transcript identifiers that share the k-mer if its global frequency is more than 1. For unique k-mers, the identifier of the single transcript is given.
 
+Installation
+
+To install the specific version (0.1.0) of the package `minimal-shared-kmers` using pip, run the following command in your terminal:
+
+```bash
+pip install minimal-shared-kmers==0.1.0
+```
 Usage
 To use this tool, you need to have Python installed on your system. The script requires a FASTA file with the transcript sequences as input and a directory path where the CSV files will be saved as output.
 
