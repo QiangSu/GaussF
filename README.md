@@ -177,11 +177,6 @@ Offers flexibility through user-defined minimum thresholds for k-mer counts appr
 
 Installation
 
-To install the specific version (0.1.0) of the package `minimal-shared-kmers` using pip, run the following command in your terminal:
-
-```bash
-pip install install abundance-GaussF-esti
-```
 To install the package `abundance-GaussF-esti` using pip, run the following command in your terminal:
 ```bash
 pip install abundance-GaussF-esti
