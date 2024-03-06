@@ -172,12 +172,12 @@ if __name__ == '__main__':
 main()
 
 ```
-running count normalizing script
-for TPM
+running count normalizing script<br>
+for TPM<br>
 ```python
 python count_normalizing.py --directory ./ --output_directory ./merge_data_all1 --read_length 150 --k 50 --fastq /path/to/fastq.gz
 ```
-for RPKM
+for RPKM<br>
 ```python
 python count_normalizing.py --directory ./gene_folder/example --output_directory ./gene_folder/example/12 --read_length 150 --k 50
 ```
