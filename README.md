@@ -28,7 +28,22 @@ To install the specific version (0.1.1) of the package `minimal-shared-kmers` us
 ```bash
 pip install minimal-shared-kmers
 ```
-Usage
+```bash
+import argparse
+from minimal_shared_kmers import kmer_frequency_distribution_mini_shared
+
+# Set up argument parsing
+parser = argparse.ArgumentParser(description="Process some integers.")
+parser.add_argument('--input', required=True, help='Input file path')
+parser.add_argument('--output', required=True, help='Output file path')
+
+args = parser.parse_args()
+
+# Assuming 'my_function' takes two arguments: input path and output path
+result = kmer_frequency_distribution_mini_shared.my_function(input=args.input, output=args.output)
+```
+
+Or Usage
 To use this tool, you need to have Python installed on your system. The script requires a FASTA file with the transcript sequences as input and a directory path where the CSV files will be saved as output.
 
 Execute the script with the necessary arguments from the command line. For example:<br>
