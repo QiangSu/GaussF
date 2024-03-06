@@ -217,7 +217,7 @@ estimate_abundance(args.input, args.output, args.threshold)
 ```
 running minimal-shared script
 ```python
-python analyze_kmers.py --input "./normalized_count/merged_data/" --output "./target/directory/"
+python abundance_estimation.py --input "./normalized_count/merged_data/" --output "./target/directory/"
 ```
 
 
