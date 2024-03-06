@@ -44,11 +44,12 @@ args = parser.parse_args()
 # Assuming 'my_function' takes two arguments: input path and output path
 result = kmer_frequency_distribution_mini_shared.my_function(input=args.input, output=args.output)
 ```
+running minimal-shared script
 ```python
 python analyze_kmers.py --input "./kmer_isoform_gene/mart_export_fasta_iosform.txt" --output "./kmer_isoform_gene/isoform_minimal_shared_kmers"
 ```
 
-Or Usage
+Or other Usage
 To use this tool, you need to have Python installed on your system. The script requires a FASTA file with the transcript sequences as input and a directory path where the CSV files will be saved as output.
 
 Execute the script with the necessary arguments from the command line. For example:<br>
@@ -181,8 +182,46 @@ To install the specific version (0.1.0) of the package `minimal-shared-kmers` us
 ```bash
 pip install install abundance-GaussF-esti
 ```
+To install the package `abundance-GaussF-esti` using pip, run the following command in your terminal:
+```bash
+pip install abundance-GaussF-esti
+```
+vim abundance_estimation.py
+```
+import argparse
+from abundance-GaussF-esti import pipeline_abundance_GaussF_esti_loop
 
-Example usage:
+def estimate_abundance(input_file, output_file, threshold):
+    # Load your data
+    # Assuming the input file is a CSV, adjust according to your needs
+    data = pd.read_csv(input_file)
+    
+    # You would replace the following lines with the actual estimation logic provided by abundance-GaussF-esti
+    # For example, if the package requires you to initialize an estimator and fit the data
+    estimator = SomeEstimatorClass(threshold=threshold)
+    results = estimator.estimate(data)  # Pretend 'estimate' is a method to perform the estimation - adjust according to actual package capabilities
+    
+    # Save the results to the specified output file, again assuming CSV as output
+    results.to_csv(output_file, index=False)
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Run abundance estimation.')
+    parser.add_argument('--threshold', type=int, help='Threshold for estimation', required=True)
+    parser.add_argument('--input', type=str, help='Input file path', required=True)
+    parser.add_argument('--output', type=str, help='Output file path', required=True)
+    
+    args = parser.parse_args()
+    
+    # Call the estimation function with parsed CLI arguments
+estimate_abundance(args.input, args.output, args.threshold)
+```
+running minimal-shared script
+```python
+python analyze_kmers.py --input "./normalized_count/merged_data/" --output "./target/directory/"
+```
+
+
+Or other usage:
 ```
 python pipeline_abundance_GaussF_esti_loop.py --threshold 5 --input /path/to/merge_data --output / path/to/merge_data/results_file.csv
 ```
