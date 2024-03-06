@@ -96,6 +96,51 @@ To use Kmer Counter, compile the source code and run the resulting binary with t
 // Compile this with:<br>
 // g++ -std=c++17 -o kmer_counter kmer_counter.cpp -lz -lpthread
 
+Kmer counting by python<br>
+
+To install the package `kmer-counting` using pip, run the following command in your terminal:
+```bash
+pip install kmer-counting
+```
+vim kmer_counting.py
+```
+import argparse
+import subprocess
+
+def main():
+    # Initialize Argument Parser
+    parser = argparse.ArgumentParser(description="Wrapper for running k-mer counting on fastq files.")
+    parser.add_argument('--k', type=int, required=True, help="K-mer size.")
+    parser.add_argument('--threads', type=int, required=True, help="Number of threads to use.")
+    parser.add_argument('--chunk_size', type=int, required=True, help="Chunk size for processing.")
+    parser.add_argument('--fastq', required=True, help="Path to the fastq.gz file.")
+    parser.add_argument('--kmer_dir', required=True, help="Directory for k-mer output.")
+    parser.add_argument('--output', required=True, help="Output directory for final results.")
+    
+    args = parser.parse_args()
+    
+    # Construct command
+    command = [
+        'python', 'kmer_counting_loop.py', 
+        '--k', str(args.k),
+        '--threads', str(args.threads),
+        '--chunk_size', str(args.chunk_size),
+        '--fastq', args.fastq,
+        '--kmer_dir', args.kmer_dir,
+        '--output', args.output
+    ]
+    
+    # Execute command
+    subprocess.run(command)
+
+if __name__ == '__main__':
+    main()
+```
+running counting script<br>
+```python
+python kmer_counting.py --k 50 --threads 30 --chunk_size 10000000 --fastq /path/to/your.fastq.gz --kmer_dir /path/to/kmer_output --output /path/to/final_output
+```
+
 kmer_counting_loop.py
 
 Introduction
