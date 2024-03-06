@@ -130,6 +130,59 @@ This tool is designed to handle large FASTQ files efficiently. By using parallel
 
 ### **Step 2.2: `K-mer Counts Merging and Normalization`**
 
+To install the package `count-normalize` using pip, run the following command in your terminal:
+```bash
+pip install count-normalize
+```
+vim kmer_count_normalizing.py
+```
+import argparse
+import subprocess
+
+def main():
+    parser = argparse.ArgumentParser(description="Wrapper script for count normalization tasks.")
+    parser.add_argument('--directory', required=True, help="Directory for processing.")
+    parser.add_argument('--output_directory', required=True, help="Output directory for processed files.")
+    parser.add_argument('--read_length', type=int, required=True, help="Read length.")
+    parser.add_argument('--k', type=int, required=True, help="K-mer size.")
+    parser.add_argument('--fastq', help="Optional: Fastq file path for isoform count v1 script.")
+    args = parser.parse_args()
+
+    if args.fastq:
+        # If a fastq file is provided, execute merge_normalize_isoform_count_v1
+        subprocess.run([
+            'merge_normalize_isoform_count_v1',
+            '--directory', args.directory,
+            '--fastq', args.fastq,
+            '--output_directory', args.output_directory,
+            '--read_length', str(args.read_length),
+            '--k', str(args.k)
+        ])
+    else:
+        # Otherwise, execute merge_normalized_isoform_count_TPM
+        subprocess.run([
+            'merge_normalized_isoform_count_TPM',
+            '--directory', args.directory,
+            '--output_directory', args.output_directory,
+            '--read_length', str(args.read_length),
+            '--k', str(args.k)
+        ])
+
+if __name__ == '__main__':
+main()
+
+```
+running count normalizing script
+for TPM
+```python
+python count_normalizing.py --directory ./ --output_directory ./merge_data_all1 --read_length 150 --k 50 --fastq /path/to/fastq.gz
+```
+for RPKM
+```python
+python count_normalizing.py --directory ./gene_folder/example --output_directory ./gene_folder/example/12 --read_length 150 --k 50
+```
+
+
 merge_mormalize_isoform_count_v1.py
 
 This script is designed to further process the output of a previous k-mer counting script. Its purpose is to merge the k-mer count data into the original k-mer CSV files and to normalize these counts to account for differences in the total number of k-mers and read counts. This is a necessary step in many bioinformatics workflows, particularly those involving comparative genomics or quantitative assessment of sequence representation.
