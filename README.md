@@ -28,7 +28,9 @@ To install the specific version (0.1.1) of the package `minimal-shared-kmers` us
 ```bash
 pip install minimal-shared-kmers
 ```
-```bash
+
+vim analyze_kmers.py
+```
 import argparse
 from minimal_shared_kmers import kmer_frequency_distribution_mini_shared
 
@@ -41,6 +43,9 @@ args = parser.parse_args()
 
 # Assuming 'my_function' takes two arguments: input path and output path
 result = kmer_frequency_distribution_mini_shared.my_function(input=args.input, output=args.output)
+```
+```python
+python analyze_kmers.py --input "./kmer_isoform_gene/mart_export_fasta_iosform.txt" --output "./kmer_isoform_gene/isoform_minimal_shared_kmers"
 ```
 
 Or Usage
